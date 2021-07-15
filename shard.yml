@@ -1,0 +1,14 @@
+name: pigpio
+version: 0.1.0
+
+authors:
+  - Michael Wagner <mdwranger@gmail.com>
+
+crystal: '>= 1.0.0'
+
+license: MIT
+
+development_dependencies:
+  ameba:
+    github: crystal-ameba/ameba
+    version: '~> 0.13.0'
