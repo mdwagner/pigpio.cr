@@ -223,6 +223,46 @@ module Pigpio
     fun gpio_wave_get_cbs = gpioWaveGetCbs : Int
     fun gpio_wave_get_high_cbs = gpioWaveGetHighCbs : Int
     fun gpio_wave_get_max_cbs = gpioWaveGetMaxCbs : Int
-    # stopped at 2297
+    fun gpio_serial_read_open = gpioSerialReadOpen(user_gpio : UInt, baud : UInt, data_bits : UInt) : Int
+    fun gpio_serial_read_invert = gpioSerialReadInvert(user_gpio : UInt, invert : UInt) : Int
+    fun gpio_serial_read = gpioSerialRead(user_gpio : UInt, buf : Void*, bufSize : LibC::SizeT) : Int
+    fun gpio_serial_read_close = gpioSerialReadClose(user_gpio : UInt) : Int
+    fun i2c_open = i2cOpen(i2c_bus : UInt, i2c_addr : UInt, i2c_flags : UInt) : Int
+    fun i2c_close = i2cClose(handle : UInt) : Int
+    fun i2c_write_quick = i2cWriteQuick(handle : UInt, bit : UInt) : Int
+    fun i2c_write_byte = i2cWriteByte(handle : UInt, b_val : UInt) : Int
+    fun i2c_read_byte = i2cReadByte(handle : UInt) : Int
+    fun i2c_write_byte_data = i2cWriteByteData(handle : UInt, i2c_reg : UInt, b_val : UInt) : Int
+    fun i2c_write_word_data = i2cWriteWordData(handle : UInt, i2c_reg : UInt, w_val : UInt) : Int
+    fun i2c_read_byte_data = i2cReadByteData(handle : UInt, i2c_reg : UInt) : Int
+    fun i2c_read_word_data = i2cReadWordData(handle : UInt, i2c_reg : UInt) : Int
+    fun i2c_process_call = i2cProcessCall(handle : UInt, i2c_reg : UInt, w_val : UInt) : Int
+    fun i2c_write_block_data = i2cWriteBlockData(handle : UInt, i2c_reg : UInt, buf : LibC::Char*, count : UInt) : Int
+    fun i2c_read_block_data = i2cReadBlockData(handle : UInt, i2c_reg : UInt, buf : LibC::Char*) : Int
+    fun i2c_block_process_call = i2cBlockProcessCall(handle : UInt, i2c_reg : UInt, buf : LibC::Char*, count : UInt) : Int
+    fun i2c_read_i2c_block_data = i2cReadI2CBlockData(handle : UInt, i2c_reg : UIn, buf : LibC::Char*, count : UInt) : Int
+    fun i2c_write_i2c_block_data = i2cWriteI2CBlockData(handle : UInt, i2c_reg : UIn, buf : LibC::Char*, count : UInt) : Int
+    fun i2c_read_device = i2cReadDevice(handle : UInt, buf : LibC::Char*, count : UInt) : Int
+    fun i2c_write_device = i2cWriteDevice(handle : UInt, buf : LibC::Char*, count : UInt) : Int
+    fun i2c_switch_combined = i2cSwitchCombined(setting : Int) : Void
+    fun i2c_segments = i2cSegments(handle : UInt, segs : PiIc2MsgT*, num_segs : UInt) : Int
+    fun i2c_zip = i2cZip(handle : UInt, in_buf : LibC::Char*, in_len : UInt, out_buf : LibC::Char*, out_len : UInt) : Int
+    fun bb_i2c_open = bbI2COpen(sda : UInt, scl : UIn, baud : UInt) : Int
+    fun bb_i2c_close = bbI2CClose(sda : UInt) : Int
+    fun bb_i2c_zip = bbI2CZip(sda : UInt, in_buf : LibC::Char*, in_len : UInt, out_buf : LibC::Char*, out_len : UInt) : Int
+    fun bsc_xfer = bscXfer(bsc_xfer : BscXferT*) : Int
+    fun bb_spi_open = bbSPIOpen(cs : UInt, miso : UInt, mosi : UInt, sclk : UInt, baud : UInt, spi_flags : UInt) : Int
+    fun bb_spi_close = bbSPIClose(cs : UInt) : Int
+    fun bb_spi_xfer = bbSPIXfer(cs : UInt, in_buf : LibC::Char*, out_buf : LibC::Char*, count : UInt) : Int
+    fun spi_open = spiOpen(spi_chan : UInt, baud : UInt, spi_flags : UInt) : Int
+    fun spi_close = spiClose(handle : UInt) : Int
+    fun spi_read = spiRead(handle : UInt, buf : LibC::Char*, count : UInt) : Int
+    fun spi_write = spiWrite(handle : UInt, buf : LibC::Char*, count : UInt) : Int
+    fun spi_xfer = spiXfer(handle : UInt, tx_buf : LibC::Char*, rx_buf : LibC::Char*, count : UInt) : Int
+    fun ser_open = serOpen(ser_tty : LibC::Char*, baud : UInt, ser_flags : UInt) : Int
+    fun ser_close = serClose(handle : UInt) : Int
+    fun ser_write_byte = serWriteByte(handle : UInt, b_val : UInt) : Int
+    fun ser_read_byte = serReadByte(handle : UInt) : Int
+    # stopped at 3491
   end
 end
