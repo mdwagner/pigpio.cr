@@ -98,93 +98,70 @@ module Pigpio
     PI_FROM_END                =  2
     PI_EVENT_BSC               = 31
 
-    struct GpioHeader
+    struct GpioHeaderT
       func, size : UInt16T
     end
 
-    type GpioHeaderT = GpioHeader
-
-    struct GpioExtent
+    struct GpioExtentT
       size : LibC::SizeT
       ptr : Void*
       data : UInt32T
     end
 
-    type GpioExtentT = GpioExtent
-
-    struct GpioSample
+    struct GpioSampleT
       tick, level : UInt32T
     end
 
-    type GpioSampleT = GpioSample
-
-    struct GpioReport
+    struct GpioReportT
       seqno, flags : UInt16T
       tick, level : UInt32T
     end
 
-    type GpioReportT = GpioReport
-
-    struct GpioPulse
+    struct GpioPulseT
       gpioOn, gpioOff, usDelay : UInt32T
     end
 
-    type GpioPulseT = GpioPulse
-
-    struct RawWave
+    struct RawWaveT
       gpioOn, gpioOff, usDelay, flags : UInt32T
     end
 
-    type RawWaveT = RawWave
-
-    struct RawWaveInfo
+    struct RawWaveInfoT
       botCB, topCB, botOOL, topOOL, deleted, numCB, numBOOL, numTOOL : UInt16T
     end
 
-    type RawWaveInfoT = RawWaveInfo
-
-    struct RawSPI
+    struct RawSPIT
       clk, mosi, miso, ss_pol, ss_us, clk_pol, clk_pha, clk_us : Int
     end
 
-    type RawSPIT = RawSPI
-
-    struct RawCbs
+    struct RawCbsT
       info, src, dst, length, stride, next : UInt32T
       pad : UInt32T[2]
     end
 
-    type RawCbsT = RawCbs
-
-    struct PiIc2Msg
+    struct PiIc2MsgT
       addr, flags, len : UInt16T
       buf : UInt8T*
     end
 
-    type PiIc2MsgT = PiIc2Msg
-
-    struct BscXfer
+    struct BscXferT
       control : UInt32T
       rxCnt, txCnt : Int
       rxBuf, txBuf : LibC::Char[BSC_FIFO_SIZE]
     end
 
-    type BscXferT = BscXfer
-
-    type GpioAlertFuncT = Int, Int, UInt32T -> Void
-    type GpioAlertFuncExT = Int, Int, UInt32T, Void* -> Void
-    type EventFuncT = Int, UInt32T -> Void
-    type EventFuncExT = Int, UInt32T, Void* -> Void
-    type GpioISRFuncT = Int, Int, UInt32T -> Void
-    type GpioISRFuncExT = Int, Int, UInt32T, Void* -> Void
-    type GpioTimerFuncT = -> Void
-    type GpioTimerFuncExT = Void* -> Void
-    type GpioSignalFuncT = Int -> Void
-    type GpioSignalFuncExT = Int, Void* -> Void
-    type GpioGetSamplesFuncT = GpioSampleT*, Int -> Void
-    type GpioGetSamplesFuncExT = GpioSampleT*, Int, Void* -> Void
-    type GpioThreadFuncT = Void* -> Void*
-
+    alias GpioAlertFuncT = Int, Int, UInt32T -> Void
+    alias GpioAlertFuncExT = Int, Int, UInt32T, Void* -> Void
+    alias EventFuncT = Int, UInt32T -> Void
+    alias EventFuncExT = Int, UInt32T, Void* -> Void
+    alias GpioISRFuncT = Int, Int, UInt32T -> Void
+    alias GpioISRFuncExT = Int, Int, UInt32T, Void* -> Void
+    alias GpioTimerFuncT = -> Void
+    alias GpioTimerFuncExT = Void* -> Void
+    alias GpioSignalFuncT = Int -> Void
+    alias GpioSignalFuncExT = Int, Void* -> Void
+    alias GpioGetSamplesFuncT = GpioSampleT*, Int -> Void
+    alias GpioGetSamplesFuncExT = GpioSampleT*, Int, Void* -> Void
+    alias GpioThreadFuncT = Void* -> Void*
     alias GpioCustom1 = UInt, UInt, LibC::Char*, UInt -> Int
     alias GpioCustom2 = UInt, LibC::Char*, UInt, LibC::Char*, UInt -> Int
 
