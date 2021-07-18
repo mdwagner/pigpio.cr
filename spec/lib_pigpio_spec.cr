@@ -77,5 +77,38 @@ Spectator.describe "LibPigpio" do
     LibPigpio.time_sleep(2)
     f = t2_count - oc
     expect(f).to be_checked_against(40, 5)
+
+    LibPigpio.gpio_set_pwm_freq(GPIO, 100)
+    f = LibPigpio.gpio_get_pwm_freq(GPIO)
+    expect(f).to be_checked_against(100)
+
+    oc = t2_count
+    LibPigpio.time_sleep(2)
+    f = t2_count - oc
+    expect(f).to be_checked_against(400, 1)
+
+    LibPigpio.gpio_set_pwm_freq(GPIO, 1000)
+    f = LibPigpio.gpio_get_pwm_freq(GPIO)
+    expect(f).to be_checked_against(1000)
+
+    oc = t2_count
+    LibPigpio.time_sleep(2)
+    f = t2_count - oc
+    expect(f).to be_checked_against(4000, 1)
+
+    r = LibPigpio.gpio_get_pwm_range(GPIO)
+    expect(r).to be_checked_against(255)
+
+    rr = LibPigpio.gpio_get_pwm_real_range(GPIO)
+    expect(rr).to be_checked_against(200)
+
+    LibPigpio.gpio_set_pwm_range(GPIO, 2000)
+    r = LibPigpio.gpio_get_pwm_range(GPIO)
+    expect(r).to be_checked_against(2000)
+
+    rr = LibPigpio.gpio_get_pwm_real_range(GPIO)
+    expect(rr).to be_checked_against(200)
+
+    LibPigpio.gpio_pwm(GPIO, 0)
   end
 end
