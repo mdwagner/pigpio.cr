@@ -219,7 +219,7 @@ module Pigpio
     fun gpio_wave_add_serial = gpioWaveAddSerial(user_gpio : UInt, baud : UInt, data_bits : UInt, stop_bits : UInt, offset : UInt, num_bytes : UInt, str : LibC::Char*) : Int
     fun gpio_wave_create = gpioWaveCreate : Int
     fun gpio_wave_create_pad = gpioWaveCreatePad(pct_cb : Int, pct_bool : Int, pct_tool : Int) : Int
-    fun gpio_wave_delete = gpioWaveCreate(wave_id : UInt) : Int
+    fun gpio_wave_delete = gpioWaveDelete(wave_id : UInt) : Int
     fun gpio_wave_tx_send = gpioWaveTxSend(wave_id : UInt, wave_mode : UInt) : Int
     fun gpio_wave_chain = gpioWaveChain(buf : LibC::Char*, bufSize : UInt) : Int
     fun gpio_wave_tx_at = gpioWaveTxAt : Int
@@ -251,14 +251,14 @@ module Pigpio
     fun i2c_write_block_data = i2cWriteBlockData(handle : UInt, i2c_reg : UInt, buf : LibC::Char*, count : UInt) : Int
     fun i2c_read_block_data = i2cReadBlockData(handle : UInt, i2c_reg : UInt, buf : LibC::Char*) : Int
     fun i2c_block_process_call = i2cBlockProcessCall(handle : UInt, i2c_reg : UInt, buf : LibC::Char*, count : UInt) : Int
-    fun i2c_read_i2c_block_data = i2cReadI2CBlockData(handle : UInt, i2c_reg : UIn, buf : LibC::Char*, count : UInt) : Int
-    fun i2c_write_i2c_block_data = i2cWriteI2CBlockData(handle : UInt, i2c_reg : UIn, buf : LibC::Char*, count : UInt) : Int
+    fun i2c_read_i2c_block_data = i2cReadI2CBlockData(handle : UInt, i2c_reg : UInt, buf : LibC::Char*, count : UInt) : Int
+    fun i2c_write_i2c_block_data = i2cWriteI2CBlockData(handle : UInt, i2c_reg : UInt, buf : LibC::Char*, count : UInt) : Int
     fun i2c_read_device = i2cReadDevice(handle : UInt, buf : LibC::Char*, count : UInt) : Int
     fun i2c_write_device = i2cWriteDevice(handle : UInt, buf : LibC::Char*, count : UInt) : Int
     fun i2c_switch_combined = i2cSwitchCombined(setting : Int) : Void
     fun i2c_segments = i2cSegments(handle : UInt, segs : PiIc2MsgT*, num_segs : UInt) : Int
     fun i2c_zip = i2cZip(handle : UInt, in_buf : LibC::Char*, in_len : UInt, out_buf : LibC::Char*, out_len : UInt) : Int
-    fun bb_i2c_open = bbI2COpen(sda : UInt, scl : UIn, baud : UInt) : Int
+    fun bb_i2c_open = bbI2COpen(sda : UInt, scl : UInt, baud : UInt) : Int
     fun bb_i2c_close = bbI2CClose(sda : UInt) : Int
     fun bb_i2c_zip = bbI2CZip(sda : UInt, in_buf : LibC::Char*, in_len : UInt, out_buf : LibC::Char*, out_len : UInt) : Int
     fun bsc_transfer = bscXfer(bsc_xfer : BscXferT*) : Int
