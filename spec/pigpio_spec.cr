@@ -17,22 +17,32 @@ Spectator.describe Pigpio do
   let(gpio) { 25 }
 
   it "Testing pigpio C I/F" do
-    puts LibPigpio.gpio_version
-    puts LibPigpio.gpio_hardware_revision
+    expect(LibPigpio.gpio_version).not_to eq(0)
+
+    unless LibPigpio.gpio_hardware_revision > 0
+      puts "Hardware revision cannot be found or is not a valid hexadecimal number"
+    end
   end
 
-  context "Mode/PUD/read/write tests" do
-    it "set mode, get mode" do
-      LibPigpio.gpio_set_mode(gpio, LibPigpio::PI_INPUT)
-      actual = LibPigpio.gpio_get_mode(gpio)
-      should_check(actual, 0, pc: 0)
-    end
+  it "Mode/PUD/read/write tests" do
+    LibPigpio.gpio_set_mode(gpio, LibPigpio::PI_INPUT)
+    should_check LibPigpio.gpio_get_mode(gpio), 0, 0
 
-    it "set pull up down, read" do
-      LibPigpio.gpio_set_pull_up_down(gpio, LibPigpio::PI_PUD_UP)
-      LibPigpio.gpio_delay(1)
-      actual = LibPigpio.gpio_read(gpio)
-      should_check(actual, 1, pc: 0)
-    end
+    LibPigpio.gpio_set_pull_up_down(gpio, LibPigpio::PI_PUD_UP)
+    LibPigpio.gpio_delay(1)
+    should_check LibPigpio.gpio_read(gpio), 1, 0
+
+    LibPigpio.gpio_set_pull_up_down(gpio, LibPigpio::PI_PUD_DOWN)
+    LibPigpio.gpio_delay(1)
+    should_check LibPigpio.gpio_read(gpio), 0, 0
+
+    LibPigpio.gpio_write(gpio, LibPigpio::PI_LOW)
+    should_check LibPigpio.gpio_get_mode(gpio), 1, 0
+
+    should_check LibPigpio.gpio_read(gpio), 0, 0
+
+    LibPigpio.gpio_write(gpio, LibPigpio::PI_HIGH)
+    LibPigpio.gpio_delay(1)
+    should_check LibPigpio.gpio_read(gpio), 1, 0
   end
 end

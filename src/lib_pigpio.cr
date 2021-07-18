@@ -2,10 +2,12 @@ module Pigpio
   @[Link("pigpio")]
   lib LibPigpio
     alias Int = LibC::Int
+    alias Int32T = LibC::Int32T
     alias UInt = LibC::UInt
     alias UInt8T = LibC::UInt8T
     alias UInt16T = LibC::UInt16T
     alias UInt32T = LibC::UInt32T
+    alias UInt64T = LibC::UInt64T
 
     BSC_FIFO_SIZE              =         512
     PI_OFF                     =           0
@@ -76,19 +78,25 @@ module Pigpio
     PI_MEM_ALLOC_AUTO          =      0
     PI_MEM_ALLOC_PAGEMAP       =      1
     PI_MEM_ALLOC_MAILBOX       =      2
-    RISING_EDGE                =      0
-    FALLING_EDGE               =      1
-    EITHER_EDGE                =      2
-    PI_FILE_READ               =      1
-    PI_FILE_WRITE              =      2
-    PI_FILE_RW                 =      3
-    PI_FILE_APPEND             =      4
-    PI_FILE_CREATE             =      8
-    PI_FILE_TRUNC              =     16
-    PI_FROM_START              =      0
-    PI_FROM_CURRENT            =      1
-    PI_FROM_END                =      2
-    PI_EVENT_BSC               =     31
+    PI_CFG_DBG_LEVEL           =      0
+    PI_CFG_ALERT_FREQ          =      4
+    PI_CFG_RT_PRIORITY         = 1 << 8
+    PI_CFG_STATS               = 1 << 9
+    PI_CFG_NOSIGHANDLER        = 1 << 10
+    PI_CFG_ILLEGAL_VAL         = 1 << 11
+    RISING_EDGE                =  0
+    FALLING_EDGE               =  1
+    EITHER_EDGE                =  2
+    PI_FILE_READ               =  1
+    PI_FILE_WRITE              =  2
+    PI_FILE_RW                 =  3
+    PI_FILE_APPEND             =  4
+    PI_FILE_CREATE             =  8
+    PI_FILE_TRUNC              = 16
+    PI_FROM_START              =  0
+    PI_FROM_CURRENT            =  1
+    PI_FROM_END                =  2
+    PI_EVENT_BSC               = 31
 
     struct GpioHeader
       func, size : UInt16T
@@ -177,6 +185,9 @@ module Pigpio
     type GpioGetSamplesFuncExT = GpioSampleT*, Int, Void* -> Void
     type GpioThreadFuncT = Void* -> Void*
 
+    alias GpioCustom1 = UInt, UInt, LibC::Char*, UInt -> Int
+    alias GpioCustom2 = UInt, LibC::Char*, UInt, LibC::Char*, UInt -> Int
+
     fun gpio_init = gpioInitialise : Int
     fun gpio_terminate = gpioTerminate : Void
     fun gpio_set_mode = gpioSetMode(gpio : UInt, mode : UInt) : Int
@@ -250,19 +261,96 @@ module Pigpio
     fun bb_i2c_open = bbI2COpen(sda : UInt, scl : UIn, baud : UInt) : Int
     fun bb_i2c_close = bbI2CClose(sda : UInt) : Int
     fun bb_i2c_zip = bbI2CZip(sda : UInt, in_buf : LibC::Char*, in_len : UInt, out_buf : LibC::Char*, out_len : UInt) : Int
-    fun bsc_xfer = bscXfer(bsc_xfer : BscXferT*) : Int
+    fun bsc_transfer = bscXfer(bsc_xfer : BscXferT*) : Int
     fun bb_spi_open = bbSPIOpen(cs : UInt, miso : UInt, mosi : UInt, sclk : UInt, baud : UInt, spi_flags : UInt) : Int
     fun bb_spi_close = bbSPIClose(cs : UInt) : Int
-    fun bb_spi_xfer = bbSPIXfer(cs : UInt, in_buf : LibC::Char*, out_buf : LibC::Char*, count : UInt) : Int
+    fun bb_spi_transfer = bbSPIXfer(cs : UInt, in_buf : LibC::Char*, out_buf : LibC::Char*, count : UInt) : Int
     fun spi_open = spiOpen(spi_chan : UInt, baud : UInt, spi_flags : UInt) : Int
     fun spi_close = spiClose(handle : UInt) : Int
     fun spi_read = spiRead(handle : UInt, buf : LibC::Char*, count : UInt) : Int
     fun spi_write = spiWrite(handle : UInt, buf : LibC::Char*, count : UInt) : Int
-    fun spi_xfer = spiXfer(handle : UInt, tx_buf : LibC::Char*, rx_buf : LibC::Char*, count : UInt) : Int
+    fun spi_transfer = spiXfer(handle : UInt, tx_buf : LibC::Char*, rx_buf : LibC::Char*, count : UInt) : Int
     fun ser_open = serOpen(ser_tty : LibC::Char*, baud : UInt, ser_flags : UInt) : Int
     fun ser_close = serClose(handle : UInt) : Int
     fun ser_write_byte = serWriteByte(handle : UInt, b_val : UInt) : Int
     fun ser_read_byte = serReadByte(handle : UInt) : Int
-    # stopped at 3491
+    fun ser_write = serWrite(handle : UInt, buf : LibC::Char*, count : UInt) : Int
+    fun ser_read = serRead(handle : UInt, buf : LibC::Char*, count : UInt) : Int
+    fun ser_data_available = serDataAvailable(handle : UInt) : Int
+    fun gpio_trigger = gpioTrigger(user_gpio : UInt, pulse_len : UInt, level : UInt) : Int
+    fun gpio_set_watchdog = gpioSetWatchdog(user_gpio : UInt, timeout : UInt) : Int
+    fun gpio_noise_filter = gpioNoiseFilter(user_gpio : UInt, steady : UInt, active : UInt) : Int
+    fun gpio_glitch_filter = gpioGlitchFilter(user_gpio : UInt, steady : UInt) : Int
+    fun gpio_set_get_samples_func = gpioSetGetSamplesFunc(f : GpioGetSamplesFuncT, bits : UInt32T) : Int
+    fun gpio_set_get_samples_func_ex = gpioSetGetSamplesFuncEx(f : GpioGetSamplesFuncExT, bits : UInt32T, userdata : Void*) : Int
+    fun gpio_set_timer_func = gpioSetTimerFunc(timer : UInt, millis : UInt, f : GpioTimerFuncT) : Int
+    fun gpio_set_timer_func_ex = gpioSetTimerFuncEx(timer : UInt, millis : UInt, f : GpioTimerFuncExT, userdata : Void*) : Int
+    fun gpio_start_thread = gpioStartThread(f : GpioThreadFuncT, userdata : Void*) : LibC::PthreadT
+    fun gpio_stop_thread = gpioStopThread(pth : LibC::PthreadT*) : Void
+    fun gpio_store_script = gpioStoreScript(script : LibC::Char*) : Int
+    fun gpio_run_script = gpioRunScript(script_id : UInt, num_par : UInt, param : UInt32T*) : Int
+    fun gpio_update_script = gpioUpdateScript(script_id : UInt, num_par : UInt, param : UInt32T*) : Int
+    fun gpio_script_status = gpioScriptStatus(script_id : UInt, param : UInt32T*) : Int
+    fun gpio_stop_script = gpioStopScript(script_id : UInt) : Int
+    fun gpio_delete_script = gpioDeleteScript(script_id : UInt) : Int
+    fun gpio_set_signal_func = gpioSetSignalFunc(signum : UInt, f : GpioSignalFuncT) : Int
+    fun gpio_set_signal_func_ex = gpioSetSignalFuncEx(signum : UInt, f : GpioSignalFuncExT, userdata : Void*) : Int
+    fun gpio_read_bits_0_31 = gpioRead_Bits_0_31 : UInt32T
+    fun gpio_read_bits_32_53 = gpioRead_Bits_32_53 : UInt32T
+    fun gpio_write_bits_0_31_clear = gpioWrite_Bits_0_31_Clear(bits : UInt32T) : Int
+    fun gpio_write_bits_32_53_clear = gpioWrite_Bits_32_53_Clear(bits : UInt32T) : Int
+    fun gpio_write_bits_0_31_set = gpioWrite_Bits_0_31_Set(bits : UInt32T) : Int
+    fun gpio_write_bits_32_53_set = gpioWrite_Bits_32_53_Set(bits : UInt32T) : Int
+    fun gpio_hardware_clock = gpioHardwareClock(gpio : UInt, clk_freq : UInt) : Int
+    fun gpio_hardware_pwm = gpioHardwarePWM(gpio : UInt, pwm_freq : UInt, pwm_duty : UInt) : Int
+    fun gpio_time = gpioTime(timetype : UInt, seconds : Int*, micros : Int*) : Int
+    fun gpio_sleep = gpioSleep(timetype : UInt, seconds : Int, micros : Int) : Int
+    fun gpio_delay = gpioDelay(micros : UInt32T) : UInt32T
+    fun gpio_tick = gpioTick : UInt32T
+    fun gpio_hardware_revision = gpioHardwareRevision : UInt
+    fun gpio_version = gpioVersion : UInt
+    fun gpio_get_pad = gpioGetPad(pad : UInt) : Int
+    fun gpio_set_pad = gpioSetPad(pad : UInt, pad_strength : UInt) : Int
+    fun event_monitor = eventMonitor(handle : UInt, bits : UInt32T) : Int
+    fun event_set_func = eventSetFunc(event : UInt, f : EventFuncT) : Int
+    fun event_set_func_ex = eventSetFuncEx(event : UInt, f : EventFuncExT, userdata : Void*) : Int
+    fun event_trigger = eventTrigger(event : UInt) : Int
+    fun shell(script_name : LibC::Char*, script_string : LibC::Char*) : Int
+    fun file_open = fileOpen(file : LibC::Char*, mode : UInt) : Int
+    fun file_close = fileClose(handle : UInt) : Int
+    fun file_write = fileWrite(handle : UInt, buf : LibC::Char*, count : UInt) : Int
+    fun file_read = fileRead(handle : UInt, buf : LibC::Char*, count : UInt) : Int
+    fun file_seek = fileSeek(handle : UInt, seek_offset : Int32T, seek_from : Int) : Int
+    fun file_list = fileList(fpat : LibC::Char*, buf : LibC::Char*, count : UInt) : Int
+    fun gpio_cfg_buffer_size = gpioCfgBufferSize(cfg_millis : UInt) : Int
+    fun gpio_cfg_clock = gpioCfgClock(cfg_micros : UInt, cfg_peripheral : UInt, cfg_source : UInt) : Int
+    fun gpio_cfg_dma_channels = gpioCfgDMAchannels(primary_channel : UInt, secondary_channel : UInt) : Int
+    fun gpio_cfg_permissions = gpioCfgPermissions(update_mask : UInt64T) : Int
+    fun gpio_cfg_socket_port = gpioCfgSocketPort(port : UInt) : Int
+    fun gpio_cfg_interfaces = gpioCfgInterfaces(if_flags : UInt) : Int
+    fun gpio_cfg_mem_alloc = gpioCfgMemAlloc(mem_alloc_mode : UInt) : Int
+    fun gpio_cfg_net_addr = gpioCfgNetAddr(num_sock_addr : Int, sock_addr : UInt32T*) : Int
+    fun gpio_cfg_get_internals = gpioCfgGetInternals : UInt32T
+    fun gpio_cfg_set_internals = gpioCfgSetInternals(cfg_val : UInt32T) : Int
+    fun raw_wave_add_spi = rawWaveAddSPI(spi : RawSPIT*, offset : UInt, spi_ss : UInt, buf : LibC::Char*, spi_tx_bits : UInt, spi_bit_first : UInt, spi_bit_last : UInt, spi_bits : UInt) : Int
+    fun raw_wave_add_generic = rawWaveAddGeneric(num_pulses : UInt, pulses : RawWaveT*) : Int
+    fun raw_wave_cb = rawWaveCB : UInt
+    fun raw_wave_cb_adr = rawWaveCBAdr(cb_num : Int) : RawCbsT*
+    fun raw_wave_get_ool = rawWaveGetOOL(pos : Int) : UInt32T
+    fun raw_wave_set_ool = rawWaveSetOOL(pos : Int, l_val : UInt32T) : Void
+    fun raw_wave_get_out = rawWaveGetOut(pos : Int) : UInt32T
+    fun raw_wave_set_out = rawWaveSetOut(pos : Int, l_val : UInt32T) : Void
+    fun raw_wave_get_in = rawWaveGetIn(pos : Int) : UInt32T
+    fun raw_wave_set_in = rawWaveSetIn(pos : Int, l_val : UInt32T) : Void
+    fun raw_wave_info = rawWaveInfo(wave_id : Int) : RawWaveInfoT
+    fun get_bit_in_bytes = getBitInBytes(bit_pos : Int, buf : LibC::Char*, num_bits : Int) : Int
+    fun put_bit_in_bytes = putBitInBytes(bit_pos : Int, buf : LibC::Char*, bit : Int) : Void
+    fun time_time : LibC::Double
+    fun time_sleep(seconds : LibC::Double) : Void
+    fun raw_dump_wave = rawDumpWave : Void
+    fun raw_dump_script = rawDumpScript(script_id : UInt) : Void
+
+    $gpioCustom1 : GpioCustom1
+    $gpioCustom2 : GpioCustom2
   end
 end
