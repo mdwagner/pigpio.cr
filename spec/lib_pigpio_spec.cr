@@ -3,15 +3,27 @@ require "./spec_helper"
 class Globals
   class_property t2_count = 0
 
+  class_property t3_reset = 1
+  class_property t3_count = 0
+  class_property t3_tick = 0
+  class_property t3_on = 0.0
+  class_property t3_off = 0.0
+
   def self.reset : Void
     t2_count = 0
+
+    t3_reset = 1
+    t3_count = 0
+    t3_tick = 0
+    t3_on = 0.0
+    t3_off = 0.0
   end
 end
 
 Spectator.describe "LibPigpio" do
   alias LibPigpio = Pigpio::LibPigpio
 
-  GPIO = 25
+  GPIO     =         25
   USERDATA = 18_249_013
 
   before_all { LibPigpio.gpio_init < 0 && raise "pigpio init failed" }
@@ -116,15 +128,47 @@ Spectator.describe "LibPigpio" do
     LibPigpio.gpio_pwm(GPIO, 0)
   end
 
-  # it "PWM/Servo pulse accuracy tests" do
-  #   t3_val = USERDATA
-  #   t3_reset = 1
-  #   t3_count = 0
-  #   t3_tick = 0
-  #   t3_on = 0.0
-  #   t3_off = 0.0
-  #   pw = StaticArray[500, 1_500, 2_500]
-  #   dc = StaticArray[20, 40, 60, 80]
-  #   expect(false).to be
-  # end
+  it "PWM/Servo pulse accuracy tests" do
+    pw = StaticArray[500, 1_500, 2_500]
+    dc = StaticArray[20, 40, 60, 80]
+
+    t3_val = USERDATA
+
+    t3cbf = LibPigpio::GpioAlertFuncExT.new do |gpio, level, tick, userdata|
+      val = Box(typeof(t3_val)).unbox(userdata)
+      expect(val).to eq(USERDATA)
+
+      if Globals.t3_reset
+        Globals.t3_count = 0
+        Globals.t3_on = 0.0
+        Globals.t3_off = 0.0
+        Globals.t3_reset = 0
+      else
+        td = tick - Globals.t3_tick
+
+        if level == 0
+          Globals.t3_on += td
+        else
+          Globals.t3_off += td
+        end
+      end
+
+      Globals.t3_count += 1
+      Globals.t3_tick = tick
+    end
+    LibPigpio.gpio_set_alert_func_ex(GPIO, t3cbf, Box(typeof(t3_val)).box(t3_val))
+
+    3.times do |t|
+      LibPigpio.gpio_servo(GPIO, pw[t])
+      v = LibPigpio.gpio_get_servo_pulsewidth(GPIO)
+      expect(v).to be_checked_against(pw[t])
+
+      LibPigpio.time_sleep(1)
+      Globals.t3_reset = 1
+      LibPigpio.time_sleep(4)
+      on = Globals.t3_on
+      off = Globals.t3_off
+      expect((1e3*(on+off))/on).to be_checked_against(2e7/pw[t], 1)
+    end
+  end
 end
