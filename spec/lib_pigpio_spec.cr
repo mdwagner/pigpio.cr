@@ -132,7 +132,6 @@ Spectator.describe "LibPigpio" do
     pw = StaticArray[500, 1_500, 2_500]
     dc = StaticArray[20, 40, 60, 80]
 
-
     t3cbf = LibPigpio::GpioAlertFuncT.new do |gpio, level, tick|
       if Globals.t3_reset == 1
         Globals.t3_count = 0
@@ -170,5 +169,28 @@ Spectator.describe "LibPigpio" do
       off = Globals.t3_off
       expect((1e3*(on+off))/on).to be_checked_against(2e7/pw[t], 1)
     end
+
+    LibPigpio.gpio_servo(GPIO, 0)
+    LibPigpio.gpio_set_pwm_freq(GPIO, 1_000)
+    f = LibPigpio.gpio_get_pwm_freq(GPIO)
+    expect(f).to be_checked_against(1_000)
+
+    rr = LibPigpio.gpio_set_pwm_range(GPIO, 100)
+    expect(rr).to be_checked_against(200)
+
+    4.times do |t|
+      LibPigpio.gpio_pwm(GPIO, dc[t])
+      v = LibPigpio.gpio_get_pwm_dutycycle(GPIO)
+      expect(v).to be_checked_against(dc[t])
+
+      LibPigpio.time_sleep(1)
+      Globals.t3_reset = 1
+      LibPigpio.time_sleep(2)
+      on = Globals.t3_on
+      off = Globals.t3_off
+      expect((1e3*on)/(on+off)).to be_checked_against(1e1*dc[t], 1)
+    end
+
+    LibPigpio.gpio_pwm(GPIO, 0)
   end
 end
