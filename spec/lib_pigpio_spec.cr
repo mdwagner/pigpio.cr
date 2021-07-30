@@ -5,7 +5,7 @@ class Globals
 
   class_property t3_reset = 1
   class_property t3_count = 0
-  class_property t3_tick = 0
+  class_property t3_tick : UInt32 = 0
   class_property t3_on = 0.0
   class_property t3_off = 0.0
 
@@ -132,13 +132,9 @@ Spectator.describe "LibPigpio" do
     pw = StaticArray[500, 1_500, 2_500]
     dc = StaticArray[20, 40, 60, 80]
 
-    t3_val = USERDATA
 
-    t3cbf = LibPigpio::GpioAlertFuncExT.new do |gpio, level, tick, userdata|
-      val = Box(typeof(t3_val)).unbox(userdata)
-      expect(val).to eq(USERDATA)
-
-      if Globals.t3_reset
+    t3cbf = LibPigpio::GpioAlertFuncT.new do |gpio, level, tick|
+      if Globals.t3_reset == 1
         Globals.t3_count = 0
         Globals.t3_on = 0.0
         Globals.t3_off = 0.0
@@ -156,7 +152,11 @@ Spectator.describe "LibPigpio" do
       Globals.t3_count += 1
       Globals.t3_tick = tick
     end
-    LibPigpio.gpio_set_alert_func_ex(GPIO, t3cbf, Box(typeof(t3_val)).box(t3_val))
+    t3cbf_box = Box(typeof(t3cbf)).box(t3cbf)
+    t3cbf_f = LibPigpio::GpioAlertFuncExT.new do |gpio, level, tick, userdata|
+      Box(typeof(t3cbf)).unbox(userdata).call(gpio, level, tick)
+    end
+    LibPigpio.gpio_set_alert_func_ex(GPIO, t3cbf_f, t3cbf_box)
 
     3.times do |t|
       LibPigpio.gpio_servo(GPIO, pw[t])
