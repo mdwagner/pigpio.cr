@@ -51,50 +51,48 @@ Spectator.describe "LibPigpio" do
     f = LibPigpio.gpio_get_pwm_freq(GPIO)
     expect(f).to be_checked_against(10)
 
-    t2_count = 0
-
-    t2cb = LibPigpio::GpioAlertFuncT.new { t2_count += 1 }
-    t2cb_closure = Box(typeof(t2cb)).box(t2cb)
-    t2cb_f = LibPigpio::GpioAlertFuncExT.new do |gpio, level, tick, userdata|
-      Box(typeof(t2cb)).unbox(userdata).call(gpio, level, tick)
+    class Globals
+      class_property t2_count = 0
     end
-    LibPigpio.gpio_set_alert_func_ex(GPIO, t2cb_f, t2cb_closure)
+
+    t2cb = LibPigpio::GpioAlertFuncT.new { Globals.t2_count += 1 }
+    LibPigpio.gpio_set_alert_func(GPIO, t2cb)
 
     LibPigpio.gpio_pwm(GPIO, 0)
     dc = LibPigpio.gpio_get_pwm_dutycycle(GPIO)
     expect(dc).to be_checked_against(0)
 
     LibPigpio.time_sleep(0.5)
-    oc = t2_count
+    oc = Globals.t2_count
     LibPigpio.time_sleep(2)
-    f = t2_count - oc
+    f = Globals.t2_count - oc
     expect(f).to be_checked_against(0)
 
     LibPigpio.gpio_pwm(GPIO, 128)
     dc = LibPigpio.gpio_get_pwm_dutycycle(GPIO)
     expect(dc).to be_checked_against(128)
 
-    oc = t2_count
+    oc = Globals.t2_count
     LibPigpio.time_sleep(2)
-    f = t2_count - oc
+    f = Globals.t2_count - oc
     expect(f).to be_checked_against(40, 5)
 
     LibPigpio.gpio_set_pwm_freq(GPIO, 100)
     f = LibPigpio.gpio_get_pwm_freq(GPIO)
     expect(f).to be_checked_against(100)
 
-    oc = t2_count
+    oc = Globals.t2_count
     LibPigpio.time_sleep(2)
-    f = t2_count - oc
+    f = Globals.t2_count - oc
     expect(f).to be_checked_against(400, 1)
 
     LibPigpio.gpio_set_pwm_freq(GPIO, 1000)
     f = LibPigpio.gpio_get_pwm_freq(GPIO)
     expect(f).to be_checked_against(1000)
 
-    oc = t2_count
+    oc = Globals.t2_count
     LibPigpio.time_sleep(2)
-    f = t2_count - oc
+    f = Globals.t2_count - oc
     expect(f).to be_checked_against(4000, 1)
 
     r = LibPigpio.gpio_get_pwm_range(GPIO)
@@ -113,15 +111,15 @@ Spectator.describe "LibPigpio" do
     LibPigpio.gpio_pwm(GPIO, 0)
   end
 
-  it "PWM/Servo pulse accuracy tests" do
-    t3_val = USERDATA
-    t3_reset = 1
-    t3_count = 0
-    t3_tick = 0
-    t3_on = 0.0
-    t3_off = 0.0
-    pw = StaticArray[500, 1_500, 2_500]
-    dc = StaticArray[20, 40, 60, 80]
-    expect(false).to be
-  end
+  # it "PWM/Servo pulse accuracy tests" do
+  #   t3_val = USERDATA
+  #   t3_reset = 1
+  #   t3_count = 0
+  #   t3_tick = 0
+  #   t3_on = 0.0
+  #   t3_off = 0.0
+  #   pw = StaticArray[500, 1_500, 2_500]
+  #   dc = StaticArray[20, 40, 60, 80]
+  #   expect(false).to be
+  # end
 end
