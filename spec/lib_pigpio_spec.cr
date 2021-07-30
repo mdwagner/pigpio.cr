@@ -1,5 +1,13 @@
 require "./spec_helper"
 
+class Globals
+  class_property t2_count = 0
+
+  def self.reset : Void
+    t2_count = 0
+  end
+end
+
 Spectator.describe "LibPigpio" do
   alias LibPigpio = Pigpio::LibPigpio
 
@@ -8,6 +16,7 @@ Spectator.describe "LibPigpio" do
 
   before_all { LibPigpio.gpio_init < 0 && raise "pigpio init failed" }
   after_all { LibPigpio.gpio_terminate }
+  before_each { Globals.reset }
 
   it "Testing pigpio C I/F" do
     expect(LibPigpio.gpio_version).to be_gt(0)
@@ -50,10 +59,6 @@ Spectator.describe "LibPigpio" do
     LibPigpio.gpio_set_pwm_freq(GPIO, 0)
     f = LibPigpio.gpio_get_pwm_freq(GPIO)
     expect(f).to be_checked_against(10)
-
-    class Globals
-      class_property t2_count = 0
-    end
 
     t2cb = LibPigpio::GpioAlertFuncT.new { Globals.t2_count += 1 }
     LibPigpio.gpio_set_alert_func(GPIO, t2cb)
