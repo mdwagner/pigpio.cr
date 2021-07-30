@@ -4,6 +4,7 @@ Spectator.describe "LibPigpio" do
   alias LibPigpio = Pigpio::LibPigpio
 
   GPIO = 25
+  USERDATA = 18_249_013
 
   before_all { LibPigpio.gpio_init < 0 && raise "pigpio init failed" }
   after_all { LibPigpio.gpio_terminate }
@@ -110,5 +111,17 @@ Spectator.describe "LibPigpio" do
     expect(rr).to be_checked_against(200)
 
     LibPigpio.gpio_pwm(GPIO, 0)
+  end
+
+  it "PWM/Servo pulse accuracy tests" do
+    t3_val = USERDATA
+    t3_reset = 1
+    t3_count = 0
+    t3_tick = 0
+    t3_on = 0.0
+    t3_off = 0.0
+    pw = StaticArray[500, 1_500, 2_500]
+    dc = StaticArray[20, 40, 60, 80]
+    expect(false).to be
   end
 end
