@@ -167,7 +167,7 @@ Spectator.describe "LibPigpio" do
       LibPigpio.time_sleep(4)
       on = Globals.t3_on
       off = Globals.t3_off
-      expect((1e3*(on+off))/on).to be_checked_against(2e7/pw[t], 1)
+      expect((1e3*(on + off))/on).to be_checked_against(2e7/pw[t], 1)
     end
 
     LibPigpio.gpio_servo(GPIO, 0)
@@ -188,9 +188,66 @@ Spectator.describe "LibPigpio" do
       LibPigpio.time_sleep(2)
       on = Globals.t3_on
       off = Globals.t3_off
-      expect((1e3*on)/(on+off)).to be_checked_against(1e1*dc[t], 1)
+      expect((1e3*on)/(on + off)).to be_checked_against(1e1*dc[t], 1)
     end
 
     LibPigpio.gpio_pwm(GPIO, 0)
+  end
+
+  it "Pipe notification tests" do
+    LibPigpio.gpio_set_pwm_freq(GPIO, 0)
+    LibPigpio.gpio_pwm(GPIO, 0)
+    LibPigpio.gpio_set_pwm_range(GPIO, 100)
+
+    h = LibPigpio.gpio_notify_open
+
+    n = 0
+    s = 0
+    l = 0
+    seq_ok = 1
+    toggle_ok = 1
+
+    File.open("/dev/pigpio#{h}", "r") do |f|
+      e = LibPigpio.gpio_notify_begin(h, (1 << GPIO))
+      expect(e).to be_checked_against(0)
+
+      LibPigpio.gpio_pwm(GPIO, 50)
+      LibPigpio.time_sleep(4)
+      LibPigpio.gpio_pwm(GPIO, 0)
+
+      e = LibPigpio.gpio_notify_pause(h)
+      expect(e).to be_checked_against(0)
+
+      e = LibPigpio.gpio_notify_close(h)
+      expect(e).to be_checked_against(0)
+
+      loop do
+        bytes = Bytes.new(12)
+        if f.read(bytes) == 12
+          r = bytes.to_unsafe.as(LibPigpio::GpioReportT*).value
+
+          seq_ok = 0 if s != r.seqno
+
+          if n != 0 && l != (r.level & (1 << GPIO))
+            toggle_ok = 0
+          end
+
+          if (r.level & (1 << GPIO)) != 0
+            l = 0
+          else
+            l = (1 << GPIO)
+          end
+
+          s += 1
+          n += 1
+        else
+          break
+        end
+      end
+    end
+
+    expect(seq_ok).to be_checked_against(1)
+    expect(toggle_ok).to be_checked_against(1)
+    expect(n).to be_checked_against(80, 10)
   end
 end
