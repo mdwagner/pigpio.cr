@@ -98,24 +98,32 @@ module Pigpio
     PI_FROM_END                =  2
     PI_EVENT_BSC               = 31
 
-    struct GpioHeaderT
+    struct GpioHeader
       func, size : UInt16T
     end
 
-    struct GpioExtentT
+    type GpioHeaderT = GpioHeader
+
+    struct GpioExtent
       size : LibC::SizeT
       ptr : Void*
       data : UInt32T
     end
 
-    struct GpioSampleT
+    type GpioExtentT = GpioExtent
+
+    struct GpioSample
       tick, level : UInt32T
     end
 
-    struct GpioReportT
+    type GpioSampleT = GpioSample
+
+    struct GpioReport
       seqno, flags : UInt16T
       tick, level : UInt32T
     end
+
+    type GpioReportT = GpioReport
 
     struct GpioPulseT
       gpioOn, gpioOff, usDelay : UInt32T
@@ -125,18 +133,22 @@ module Pigpio
       gpioOn, gpioOff, usDelay, flags : UInt32T
     end
 
-    struct RawWaveInfoT
+    struct RawWaveInfo
       botCB, topCB, botOOL, topOOL, deleted, numCB, numBOOL, numTOOL : UInt16T
     end
 
-    struct RawSPIT
+    type RawWaveInfoT = RawWaveInfo
+
+    struct RawSpiT
       clk, mosi, miso, ss_pol, ss_us, clk_pol, clk_pha, clk_us : Int
     end
 
-    struct RawCbsT
+    struct RawCbs
       info, src, dst, length, stride, next : UInt32T
       pad : UInt32T[2]
     end
+
+    type RawCbsT = RawCbs
 
     struct PiIc2MsgT
       addr, flags, len : UInt16T
@@ -309,7 +321,7 @@ module Pigpio
     fun gpio_cfg_net_addr = gpioCfgNetAddr(num_sock_addr : Int, sock_addr : UInt32T*) : Int
     fun gpio_cfg_get_internals = gpioCfgGetInternals : UInt32T
     fun gpio_cfg_set_internals = gpioCfgSetInternals(cfg_val : UInt32T) : Int
-    fun raw_wave_add_spi = rawWaveAddSPI(spi : RawSPIT*, offset : UInt, spi_ss : UInt, buf : LibC::Char*, spi_tx_bits : UInt, spi_bit_first : UInt, spi_bit_last : UInt, spi_bits : UInt) : Int
+    fun raw_wave_add_spi = rawWaveAddSPI(spi : RawSpiT*, offset : UInt, spi_ss : UInt, buf : LibC::Char*, spi_tx_bits : UInt, spi_bit_first : UInt, spi_bit_last : UInt, spi_bits : UInt) : Int
     fun raw_wave_add_generic = rawWaveAddGeneric(num_pulses : UInt, pulses : RawWaveT*) : Int
     fun raw_wave_cb = rawWaveCB : UInt
     fun raw_wave_cb_adr = rawWaveCBAdr(cb_num : Int) : RawCbsT*
