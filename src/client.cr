@@ -12,8 +12,7 @@ module Pigpio
 
     def run
       raise "Initialization failed" if start < 0
-      yield self
-      stop
+      yield self ensure stop
     end
 
     def start
