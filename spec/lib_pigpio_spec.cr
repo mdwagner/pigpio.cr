@@ -15,6 +15,8 @@ class Globals
   class_property t6_on = 0
   class_property t6_on_tick : UInt32 = 0
 
+  class_property t7_count = 0
+
   def self.reset : Void
     t2_count = 0
 
@@ -29,6 +31,8 @@ class Globals
     t6_count = 0
     t6_on = 0
     t6_on_tick = 0
+
+    t7_count = 0
   end
 end
 
@@ -466,5 +470,27 @@ Spectator.describe "LibPigpio" do
 
     expect(Globals.t6_count).to be_checked_against(5)
     expect(Globals.t6_on).to be_checked_against(tp, 25)
+  end
+
+  it "Watchdog tests" do
+    t7cbf = LibPigpio::GpioAlertFuncT.new do |gpio, level, tick|
+      Globals.t7_count += 1 if level == LibPigpio::PI_TIMEOUT
+    end
+    # type of edge shouldn't matter for watchdogs
+    LibPigpio.gpio_set_alert_func(GPIO, t7cbf)
+
+    LibPigpio.gpio_set_watchdog(GPIO, 50) # 50 ms, 20 per second
+    LibPigpio.time_sleep(0.5)
+    oc = Globals.t7_count
+    LibPigpio.time_sleep(2)
+    c = Globals.t7_count - oc
+    expect(c).to be_checked_against(39, 5)
+
+    LibPigpio.gpio_set_watchdog(GPIO, 0) # 0 switches watchdog off
+    LibPigpio.time_sleep(0.5)
+    oc = Globals.t7_count
+    LibPigpio.time_sleep(2)
+    c = Globals.t7_count - oc
+    expect(c).to be_checked_against(0, 1)
   end
 end
