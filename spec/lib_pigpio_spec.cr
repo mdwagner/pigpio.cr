@@ -11,6 +11,10 @@ class Globals
 
   class_property t5_count = 0
 
+  class_property t6_count = 0
+  class_property t6_on = 0
+  class_property t6_on_tick : UInt32 = 0
+
   def self.reset : Void
     t2_count = 0
 
@@ -21,6 +25,10 @@ class Globals
     t3_off = 0.0
 
     t5_count = 0
+
+    t6_count = 0
+    t6_on = 0
+    t6_on_tick = 0
   end
 end
 
@@ -430,5 +438,33 @@ Spectator.describe "LibPigpio" do
 
     noop = LibPigpio::GpioAlertFuncT.new { }
     LibPigpio.gpio_set_alert_func(GPIO, noop)
+  end
+
+  it "Trigger tests" do
+    LibPigpio.gpio_write(GPIO, LibPigpio::PI_LOW)
+
+    tp = 0
+
+    t6cbf = LibPigpio::GpioAlertFuncT.new do |gpio, level, tick|
+      if level == 1
+        Globals.t6_on_tick = tick
+        Globals.t6_count += 1
+      else
+        Globals.t6_on += (tick - Globals.t6_on_tick) if Globals.t6_on_tick != 0
+      end
+    end
+    LibPigpio.gpio_set_alert_func(GPIO, t6cbf)
+
+    5.times do |t|
+      LibPigpio.time_sleep(0.1)
+      x = 10 + (t * 10)
+      tp += x
+      LibPigpio.gpio_trigger(GPIO, x, 1)
+    end
+
+    LibPigpio.time_sleep(0.2)
+
+    expect(Globals.t6_count).to be_checked_against(5)
+    expect(Globals.t6_on).to be_checked_against(tp, 25)
   end
 end
