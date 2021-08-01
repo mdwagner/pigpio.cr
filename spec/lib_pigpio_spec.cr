@@ -493,4 +493,38 @@ Spectator.describe "LibPigpio" do
     c = Globals.t7_count - oc
     expect(c).to be_checked_against(0, 1)
   end
+
+  it "Bank read/write tests" do
+    LibPigpio.gpio_write(GPIO, 0)
+    v = LibPigpio.gpio_read_bits_0_31 & (1 << GPIO)
+    expect(v).to be_checked_against(0)
+
+    LibPigpio.gpio_write(GPIO, 1)
+    v = LibPigpio.gpio_read_bits_0_31 & (1 << GPIO)
+    expect(v).to be_checked_against((1 << GPIO))
+
+    LibPigpio.gpio_write_bits_0_31_clear((1 << GPIO))
+    v = LibPigpio.gpio_read(GPIO)
+    expect(v).to be_checked_against(0)
+
+    LibPigpio.gpio_write_bits_0_31_set((1 << GPIO))
+    v = LibPigpio.gpio_read(GPIO)
+    expect(v).to be_checked_against(1)
+
+    v = LibPigpio.gpio_read_bits_32_53
+
+    if v != 0
+      v = 0
+    else
+      v = 1
+    end
+
+    expect(v).to be_checked_against(0)
+
+    v = LibPigpio.gpio_write_bits_32_53_clear(0)
+    expect(v).to be_checked_against(0)
+
+    v = LibPigpio.gpio_write_bits_32_53_set(0)
+    expect(v).to be_checked_against(0)
+  end
 end
