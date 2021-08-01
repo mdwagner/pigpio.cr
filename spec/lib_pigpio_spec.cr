@@ -319,7 +319,7 @@ Spectator.describe "LibPigpio" do
     expect(e).to be_checked_against(0)
 
     LibPigpio.gpio_wave_clear
-    e = LibPigpio.gpio_wave_add_serial(GPIO, BAUD, 8, 2, 5_000_000, t5_TEXT.size, t5_TEXT)
+    e = LibPigpio.gpio_wave_add_serial(GPIO, BAUD, 8, 2, 5_000_000, t5_TEXT.bytesize, t5_TEXT)
     expect(e).to be_checked_against(3_405)
 
     wid = LibPigpio.gpio_wave_create
