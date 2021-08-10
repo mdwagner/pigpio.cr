@@ -606,6 +606,8 @@ Spectator.describe "LibPigpio" do
   it "Serial link tests" do
     text = uninitialized LibC::Char[2048]
 
+    # this test needs RXD and TXD to be connected
+
     h = LibPigpio.ser_open("/dev/ttyAMA0", 57_600, 0)
 
     expect(h).to be_checked_against(0)
@@ -651,6 +653,33 @@ Spectator.describe "LibPigpio" do
     expect(b).to be_checked_against(0)
 
     e = LibPigpio.ser_close(h)
+    expect(e).to be_checked_against(0)
+  end
+
+  pending "SMBus / I2C tests" { }
+
+  it "SPI tests" do
+    tx_buf = uninitialized LibC::Char[8]
+    rx_buf = uninitialized LibC::Char[8]
+
+    # this tests requires a MCP3202 on SPI channel 1
+
+    h = LibPigpio.spi_open(1, 50_000, 0)
+    expect(h).to be_checked_against(0)
+
+    tx_buf[0] = 0x01
+    tx_buf[1] = 0x80
+
+    5.times do
+      b = LibPigpio.spi_transfer(h, tx_buf, rx_buf, 3)
+      expect(b).to be_checked_against(3)
+      if b == 3
+        LibPigpio.time_sleep(1.0)
+        print "#{((rx_buf[1] & 0x0F)*256)|rx_buf[2]} "
+      end
+    end
+
+    e = LibPigpio.spi_close(h)
     expect(e).to be_checked_against(0)
   end
 end
