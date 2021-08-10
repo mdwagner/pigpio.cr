@@ -17,6 +17,8 @@ class Globals
 
   class_property t7_count = 0
 
+  class_property t9_count = 0
+
   def self.reset : Void
     t2_count = 0
 
@@ -33,6 +35,8 @@ class Globals
     t6_on_tick = 0
 
     t7_count = 0
+
+    t9_count = 0
   end
 end
 
@@ -526,5 +530,69 @@ Spectator.describe "LibPigpio" do
 
     v = LibPigpio.gpio_write_bits_32_53_set(0)
     expect(v).to be_checked_against(0)
+  end
+
+  it "Script store/run/status/stop/delete tests" do
+    script_param = uninitialized UInt32[10]
+
+    script = %[ld p9 p0 tag 0 w p1 1 mils 5 w p1 0 mils 5 dcr p9 jp 0]
+
+    LibPigpio.gpio_write(GPIO, 0) # need known state
+
+    Globals.t9_count = 0
+
+    t9cbf = LibPigpio::GpioAlertFuncT.new do |gpio, level, tick|
+      Globals.t9_count += 1 if level == 1
+    end
+    LibPigpio.gpio_set_alert_func(GPIO, t9cbf)
+
+    s = LibPigpio.gpio_store_script(script)
+
+    loop do
+      # loop until script initialized
+      LibPigpio.time_sleep(0.1)
+      e = LibPigpio.gpio_script_status(s, script_param)
+      break if e != LibPigpio::PI_SCRIPT_INITING
+    end
+
+    oc = Globals.t9_count
+    script_param[0] = 99
+    script_param[1] = GPIO.to_u32
+    LibPigpio.gpio_run_script(s, 2, script_param)
+    LibPigpio.time_sleep(2)
+    c = Globals.t9_count - oc
+    expect(c).to be_checked_against(100)
+
+    oc = Globals.t9_count
+    script_param[0] = 200
+    script_param[1] = GPIO.to_u32
+    LibPigpio.gpio_run_script(s, 2, script_param)
+    LibPigpio.time_sleep(0.1)
+    loop do
+      e = LibPigpio.gpio_script_status(s, script_param)
+      break if e != LibPigpio::PI_SCRIPT_RUNNING
+      LibPigpio.time_sleep(0.5)
+    end
+    c = Globals.t9_count - oc
+    LibPigpio.time_sleep(0.1)
+    expect(c).to be_checked_against(201)
+
+    oc = Globals.t9_count
+    script_param[0] = 2000
+    script_param[1] = GPIO.to_u32
+    LibPigpio.gpio_run_script(s, 2, script_param)
+    LibPigpio.time_sleep(0.1)
+    loop do
+      e = LibPigpio.gpio_script_status(s, script_param)
+      break if e != LibPigpio::PI_SCRIPT_RUNNING
+      LibPigpio.gpio_stop_script(s) if script_param[9] < 1900
+      LibPigpio.time_sleep(0.1)
+    end
+    c = Globals.t9_count - oc
+    LibPigpio.time_sleep(0.1)
+    expect(c).to be_checked_against(110, 10)
+
+    e = LibPigpio.gpio_delete_script(s)
+    expect(e).to be_checked_against(0)
   end
 end
