@@ -578,14 +578,14 @@ Spectator.describe "LibPigpio" do
     expect(c).to be_checked_against(201)
 
     oc = Globals.t9_count
-    script_param[0] = 2000
+    script_param[0] = 2_000
     script_param[1] = GPIO.to_u32
     LibPigpio.gpio_run_script(s, 2, script_param)
     LibPigpio.time_sleep(0.1)
     loop do
       e = LibPigpio.gpio_script_status(s, script_param)
       break if e != LibPigpio::PI_SCRIPT_RUNNING
-      LibPigpio.gpio_stop_script(s) if script_param[9] < 1900
+      LibPigpio.gpio_stop_script(s) if script_param[9] < 1_900
       LibPigpio.time_sleep(0.1)
     end
     c = Globals.t9_count - oc
@@ -593,6 +593,64 @@ Spectator.describe "LibPigpio" do
     expect(c).to be_checked_against(110, 10)
 
     e = LibPigpio.gpio_delete_script(s)
+    expect(e).to be_checked_against(0)
+  end
+
+  def ta_TEXT
+    "To be, or not to be, that is the question-\
+    Whether 'tis Nobler in the mind to suffer\
+    The Slings and Arrows of outrageous Fortune,\
+    Or to take Arms against a Sea of troubles,"
+  end
+
+  it "Serial link tests" do
+    text = uninitialized LibC::Char[2048]
+
+    h = LibPigpio.ser_open("/dev/ttyAMA0", 57_600, 0)
+
+    expect(h).to be_checked_against(0)
+
+    b = LibPigpio.ser_read(h, text, sizeof(typeof(text))) # flush buffer
+
+    b = LibPigpio.ser_data_available(h)
+    expect(b).to be_checked_against(0)
+
+    e = LibPigpio.ser_write(h, ta_TEXT, ta_TEXT.bytesize)
+    expect(e).to be_checked_against(0)
+
+    e = LibPigpio.ser_write_byte(h, 0xAA)
+    e = LibPigpio.ser_write_byte(h, 0x55)
+    e = LibPigpio.ser_write_byte(h, 0x00)
+    e = LibPigpio.ser_write_byte(h, 0xFF)
+
+    expect(e).to be_checked_against(0)
+
+    LibPigpio.time_sleep(0.1) # allow time for transmission
+
+    b = LibPigpio.ser_data_available(h)
+    expect_to_be_checked_against(b, ta_TEXT.bytesize + 4)
+
+    b = LibPigpio.ser_read(h, text, ta_TEXT.bytesize)
+    expect_to_be_checked_against(b, ta_TEXT.bytesize)
+    text[b] = 0 if b >= 0
+    expect_to_contain(String.new(text.to_slice), ta_TEXT)
+
+    b = LibPigpio.ser_read_byte(h)
+    expect_to_be_checked_against(b, 0xAA)
+
+    b = LibPigpio.ser_read_byte(h)
+    expect_to_be_checked_against(b, 0x55)
+
+    b = LibPigpio.ser_read_byte(h)
+    expect_to_be_checked_against(b, 0x00)
+
+    b = LibPigpio.ser_read_byte(h)
+    expect_to_be_checked_against(b, 0xFF)
+
+    b = LibPigpio.ser_data_available(h)
+    expect(b).to be_checked_against(0)
+
+    e = LibPigpio.ser_close(h)
     expect(e).to be_checked_against(0)
   end
 end

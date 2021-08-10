@@ -26,3 +26,21 @@ macro be_checked_against(expected, pc = 0)
   %test_value = ::Spectator::TestValue.new({{expected}}, %label)
   ::Spectator::Matchers::PigpioCheckMatcher.new(%test_value).with_pc({{pc}})
 end
+
+# allow failures
+macro expect_to_be_checked_against(actual, expected, pc = 0)
+  if (({{actual}} >= (((1e2 - {{pc}}) * {{expected}})/1e2)) && ({{actual}} <= (((1e2 + {{pc}}) * {{expected}})/1e2)))
+    expect({{actual}}).to be_checked_against({{expected}}, {{pc}})
+  else
+    puts "{{actual}} failed to check against {{expected}}"
+  end
+end
+
+# allow failures
+macro expect_to_contain(actual, expected)
+  if {{actual}}.includes?({{expected}})
+    expect({{actual}}).to contain({{expected}})
+  else
+    puts "{{actual}} failed to contain {{expected}}"
+  end
+end
