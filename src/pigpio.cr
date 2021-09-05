@@ -1,4 +1,3 @@
-require "./version"
-require "./lib_pigpio"
-require "./config"
+require "./pigpio/version"
+require "./pigpio/lib_pigpio"
 require "./client"
