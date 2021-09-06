@@ -8,6 +8,9 @@ crystal: '>= 1.0.0'
 
 license: MIT
 
+libraries:
+  pigpio: ">= 79"
+
 development_dependencies:
   ameba:
     github: crystal-ameba/ameba

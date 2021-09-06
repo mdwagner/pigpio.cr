@@ -153,7 +153,7 @@ Spectator.describe "LibPigpio" do
     pw = StaticArray[500, 1_500, 2_500]
     dc = StaticArray[20, 40, 60, 80]
 
-    t3cbf = LibPigpio::GpioAlertFuncT.new do |gpio, level, tick|
+    t3cbf = LibPigpio::GpioAlertFuncT.new do |_, level, tick|
       if Globals.t3_reset == 1
         Globals.t3_count = 0
         Globals.t3_on = 0.0
@@ -272,7 +272,7 @@ Spectator.describe "LibPigpio" do
     expect(n).to be_checked_against(80, 10)
   end
 
-  def t5_TEXT
+  def t5_text
     <<-TEXT
     \nNow is the winter of our discontent
     Made glorious summer by this sun of York;
@@ -299,7 +299,7 @@ Spectator.describe "LibPigpio" do
     ]
     text = uninitialized LibC::Char[2048]
 
-    t5cbf = LibPigpio::GpioAlertFuncT.new do |gpio, level, tick|
+    t5cbf = LibPigpio::GpioAlertFuncT.new do |_, level, _|
       Globals.t5_count += 1 if level == 0 # falling edges
     end
     LibPigpio.gpio_set_alert_func(GPIO, t5cbf)
@@ -335,7 +335,7 @@ Spectator.describe "LibPigpio" do
     expect(e).to be_checked_against(0)
 
     LibPigpio.gpio_wave_clear
-    e = LibPigpio.gpio_wave_add_serial(GPIO, BAUD, 8, 2, 5_000_000, t5_TEXT.bytesize, t5_TEXT)
+    e = LibPigpio.gpio_wave_add_serial(GPIO, BAUD, 8, 2, 5_000_000, t5_text.bytesize, t5_text)
     expect(e).to be_checked_against(3_405)
 
     wid = LibPigpio.gpio_wave_create
@@ -354,7 +354,7 @@ Spectator.describe "LibPigpio" do
     c = LibPigpio.gpio_serial_read(GPIO, pointerof(text), sizeof(typeof(text)) - 1)
 
     text[c] = 0 if c > 0
-    expect(String.new(text.to_slice)).to contain(t5_TEXT)
+    expect(String.new(text.to_slice)).to contain(t5_text)
 
     e = LibPigpio.gpio_serial_read_close(GPIO)
     expect(e).to be_checked_against(0)
@@ -453,7 +453,7 @@ Spectator.describe "LibPigpio" do
 
     tp = 0
 
-    t6cbf = LibPigpio::GpioAlertFuncT.new do |gpio, level, tick|
+    t6cbf = LibPigpio::GpioAlertFuncT.new do |_, level, tick|
       if level == 1
         Globals.t6_on_tick = tick
         Globals.t6_count += 1
@@ -477,7 +477,7 @@ Spectator.describe "LibPigpio" do
   end
 
   it "Watchdog tests" do
-    t7cbf = LibPigpio::GpioAlertFuncT.new do |gpio, level, tick|
+    t7cbf = LibPigpio::GpioAlertFuncT.new do |_, level, _|
       Globals.t7_count += 1 if level == LibPigpio::PI_TIMEOUT
     end
     # type of edge shouldn't matter for watchdogs
@@ -541,7 +541,7 @@ Spectator.describe "LibPigpio" do
 
     Globals.t9_count = 0
 
-    t9cbf = LibPigpio::GpioAlertFuncT.new do |gpio, level, tick|
+    t9cbf = LibPigpio::GpioAlertFuncT.new do |_, level, _|
       Globals.t9_count += 1 if level == 1
     end
     LibPigpio.gpio_set_alert_func(GPIO, t9cbf)
@@ -596,7 +596,7 @@ Spectator.describe "LibPigpio" do
     expect(e).to be_checked_against(0)
   end
 
-  def ta_TEXT
+  def ta_text
     "To be, or not to be, that is the question-\
     Whether 'tis Nobler in the mind to suffer\
     The Slings and Arrows of outrageous Fortune,\
@@ -617,7 +617,7 @@ Spectator.describe "LibPigpio" do
     b = LibPigpio.ser_data_available(h)
     expect(b).to be_checked_against(0)
 
-    e = LibPigpio.ser_write(h, ta_TEXT, ta_TEXT.bytesize)
+    e = LibPigpio.ser_write(h, ta_text, ta_text.bytesize)
     expect(e).to be_checked_against(0)
 
     e = LibPigpio.ser_write_byte(h, 0xAA)
@@ -630,12 +630,12 @@ Spectator.describe "LibPigpio" do
     LibPigpio.time_sleep(0.1) # allow time for transmission
 
     b = LibPigpio.ser_data_available(h)
-    expect_to_be_checked_against(b, ta_TEXT.bytesize + 4)
+    expect_to_be_checked_against(b, ta_text.bytesize + 4)
 
-    b = LibPigpio.ser_read(h, text, ta_TEXT.bytesize)
-    expect_to_be_checked_against(b, ta_TEXT.bytesize)
+    b = LibPigpio.ser_read(h, text, ta_text.bytesize)
+    expect_to_be_checked_against(b, ta_text.bytesize)
     text[b] = 0 if b >= 0
-    expect_to_contain(String.new(text.to_slice), ta_TEXT)
+    expect_to_contain(String.new(text.to_slice), ta_text)
 
     b = LibPigpio.ser_read_byte(h)
     expect_to_be_checked_against(b, 0xAA)
