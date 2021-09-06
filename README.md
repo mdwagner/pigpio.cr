@@ -1,6 +1,6 @@
-# pigpio
+# pigpio.cr
 
-TODO: Write a description here
+Crystal binding to pigpio C library
 
 ## Installation
 
@@ -18,13 +18,28 @@ TODO: Write a description here
 
 ```crystal
 require "pigpio"
-```
 
-TODO: Write usage instructions here
+config = PigpioConfig.new
+# config = PigpioConfig.new(buffer_size_milliseconds: 120)
+# NOTE: remember to use #copy_with when modifying the config!
+
+client = PigpioClient.new(config)
+
+# block usage (recommended)
+client.connect do |connection|
+  connection.on_alert(5) { puts "hello world!" }
+end
+
+# manual usage
+client.start
+connection = client.connection
+connection.on_alert(5) { puts "hello world!" }
+client.stop
+```
 
 ## Development
 
-TODO: Write development instructions here
+Early days, but I have all the bindings created and tested against Pigpio C's test suite converted to Crystal. Pretty much all future changes will be for the Client.
 
 ## Contributing
 
