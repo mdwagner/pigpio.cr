@@ -675,7 +675,7 @@ Spectator.describe "LibPigpio" do
       expect(b).to be_checked_against(3)
       if b == 3
         LibPigpio.time_sleep(1.0)
-        print "#{((rx_buf[1] & 0x0F)*256)|rx_buf[2]} "
+        print "#{((rx_buf[1] & 0x0F)*256) | rx_buf[2]} "
       end
     end
 
