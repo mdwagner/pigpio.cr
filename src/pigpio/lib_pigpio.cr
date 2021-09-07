@@ -98,6 +98,13 @@ module Pigpio
     PI_FROM_END                =  2
     PI_EVENT_BSC               = 31
 
+    # Error Codes
+    PI_INIT_FAILED   = -1
+    PI_BAD_USER_GPIO = -2
+    PI_BAD_GPIO      = -3
+    PI_BAD_MODE      = -4
+    PI_BAD_LEVEL     = -5
+
     struct GpioHeader
       func, size : UInt16T
     end

@@ -15,7 +15,7 @@ module Pigpio
     end
 
     def connect
-      raise "Initialization failed" if start < 0
+      raise "Initialization failed" if start == LibPigpio::PI_INIT_FAILED
       yield connection ensure stop
     end
 
