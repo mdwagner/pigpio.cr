@@ -1,10 +1,12 @@
 module Pigpio
-  alias OnAlertFn = LibPigpio::GpioAlertFuncT
-  alias OnEventFn = LibPigpio::EventFuncT
-  alias OnISRFn = LibPigpio::GpioISRFuncT
-  alias OnTimerFn = LibPigpio::GpioTimerFuncT
-  alias OnSignalFn = LibPigpio::GpioSignalFuncT
-  alias OnGetSamplesFn = LibPigpio::GpioGetSamplesFuncT
+  alias OnAlertCallback = LibPigpio::GpioAlertFuncT
+  alias OnEventCallback = LibPigpio::EventFuncT
+  alias OnISRCallback = LibPigpio::GpioISRFuncT
+  alias OnTimerCallback = LibPigpio::GpioTimerFuncT
+  alias OnSignalCallback = LibPigpio::GpioSignalFuncT
+  alias OnGetSamplesCallback = LibPigpio::GpioGetSamplesFuncT
+  alias CustomCallback1 = LibPigpio::GpioCustom1
+  alias CustomCallback2 = LibPigpio::GpioCustom2
 
   enum GpioMode
     In    = LibPigpio::PI_INPUT
@@ -17,27 +19,70 @@ module Pigpio
     Alto5 = LibPigpio::PI_ALTO5
   end
 
+  enum GpioPud
+    Off  = LibPigpio::PI_PUD_OFF
+    Down = LibPigpio::PI_PUD_DOWN
+    Up   = LibPigpio::PI_PUD_UP
+  end
+
+  enum GpioLevel
+    Low  = LibPigpio::PI_LOW
+    High = LibPigpio::PI_HIGH
+  end
+
   class Connection
     @@alert_box : Void*?
 
-    def set_mode!(gpio, mode : GpioMode)
+    def set_mode(gpio, mode : GpioMode)
       case LibPigpio.gpio_set_mode(gpio, mode.value)
       when LibPigpio::PI_BAD_GPIO
-        raise "Bad GPIO Pin"
+        raise "Bad GPIO pin"
       when LibPigpio::PI_BAD_MODE
-        raise "Bad GPIO Mode"
-      else
-        nil
+        raise "Bad GPIO mode"
       end
     end
 
-    def set_mode(gpio, mode : GpioMode)
-      set_mode!(gpio, mode)
-    rescue
-      nil
+    def get_mode(gpio)
+      result = LibPigpio.gpio_get_mode(gpio)
+
+      case result
+      when LibPigpio::PI_BAD_GPIO
+        raise "Bad GPIO pin"
+      else
+        GpioMode.new(result)
+      end
     end
 
-    def on_alert(pin, &block : OnAlertFn)
+    def set_pull_up_down(gpio, pud : GpioPud)
+      case LibPigpio.gpio_set_pull_up_down(gpio, pud.value)
+      when LibPigpio::PI_BAD_GPIO
+        raise "Bad GPIO pin"
+      when LibPigpio::PI_BAD_PUD
+        raise "Bad GPIO pull up/down"
+      end
+    end
+
+    def read(gpio)
+      result = LibPigpio.gpio_read(gpio)
+
+      case result
+      when LibPigpio::PI_BAD_GPIO
+        raise "Bad GPIO pin"
+      else
+        GpioLevel.new(result)
+      end
+    end
+
+    def write(gpio, level : GpioLevel)
+      case LibPigpio.gpio_write(gpio, level.value)
+      when LibPigpio::PI_BAD_GPIO
+        raise "Bad GPIO pin"
+      when LibPigpio::PI_BAD_LEVEL
+        raise "Bad GPIO level"
+      end
+    end
+
+    def on_alert(pin, &block : OnAlertCallback)
       if block.closure?
         box = Box(typeof(block)).box(block)
         @@alert_box = box

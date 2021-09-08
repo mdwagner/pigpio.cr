@@ -32,32 +32,15 @@ module Pigpio
     end
 
     private def configure
-      if @config.buffer_size_milliseconds
-        LibPigpio.gpio_cfg_buffer_size(@config.buffer_size_milliseconds)
-      end
+      LibPigpio.gpio_cfg_buffer_size(@config.buffer_millis)
+      LibPigpio.gpio_cfg_clock(@config.clk_micros, @config.clk_peripheral.value, 0)
+      LibPigpio.gpio_cfg_dma_channels(@config.dma_primary_channel, @config.dma_secondary_channel)
+      LibPigpio.gpio_cfg_socket_port(@config.socket_port)
+      LibPigpio.gpio_cfg_interfaces(@config.interface_flag.value)
+      LibPigpio.gpio_cfg_mem_alloc(@config.mem_alloc_mode.value)
 
-      if @config.clock_microseconds
-        LibPigpio.gpio_cfg_clock(@config.clock_microseconds, @config.clock_peripheral.value, 0)
-      end
-
-      if @config.dma_primary_channel && @config.dma_secondary_channel
-        LibPigpio.gpio_cfg_dma_channels(@config.dma_primary_channel, @config.dma_secondary_channel)
-      end
-
-      if @config.permissions_update_mask
-        LibPigpio.gpio_cfg_permissions(@config.permissions_update_mask)
-      end
-
-      if @config.socket_port
-        LibPigpio.gpio_cfg_socket_port(@config.socket_port)
-      end
-
-      if @config.interface_flag
-        LibPigpio.gpio_cfg_interfaces(@config.interface_flag.value)
-      end
-
-      if @config.mem_alloc_mode
-        LibPigpio.gpio_cfg_mem_alloc(@config.mem_alloc_mode)
+      if @config.update_mask
+        LibPigpio.gpio_cfg_permissions(@config.update_mask)
       end
     end
   end
