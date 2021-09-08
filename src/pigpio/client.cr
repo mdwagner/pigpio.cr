@@ -1,34 +1,35 @@
 module Pigpio
   class Client
-    property config : Config
+    getter config = Config.new
 
-    def initialize(@config)
-    end
-
-    def start
+    def start : Int32
       configure
       LibPigpio.gpio_init
     end
 
-    def stop
+    def stop : Void
       LibPigpio.gpio_terminate
     end
 
-    def connect
+    def connect(& : Connection ->)
       raise "Initialization failed" if start == LibPigpio::PI_INIT_FAILED
       yield connection ensure stop
     end
 
-    def gpio_version
+    def gpio_version : UInt32
       LibPigpio.gpio_version
     end
 
-    def gpio_hardware_revision
+    def gpio_hardware_revision : UInt32
       LibPigpio.gpio_hardware_revision
     end
 
-    def connection
+    def connection : Connection
       Connection.new
+    end
+
+    def reset_config : Void
+      @config = Config.new
     end
 
     private def configure

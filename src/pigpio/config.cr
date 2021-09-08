@@ -17,14 +17,15 @@ module Pigpio
     Mailbox = LibPigpio::PI_MEM_ALLOC_MAILBOX
   end
 
-  record Config,
-    buffer_millis = LibPigpio::PI_DEFAULT_BUFFER_MILLIS,
-    clk_micros = LibPigpio::PI_DEFAULT_CLK_MICROS,
-    clk_peripheral : ConfigPeripheral = :pcm,
-    dma_primary_channel = LibPigpio::PI_DEFAULT_DMA_PRIMARY_CHANNEL,
-    dma_secondary_channel = LibPigpio::PI_DEFAULT_DMA_SECONDARY_CHANNEL,
-    update_mask : UInt64? = nil,
-    socket_port = LibPigpio::PI_DEFAULT_SOCKET_PORT,
-    interface_flag : ConfigInterface = :default,
-    mem_alloc_mode : ConfigMemAlloc = :auto
+  class Config
+    property buffer_millis = LibPigpio::PI_DEFAULT_BUFFER_MILLIS
+    property clk_micros = LibPigpio::PI_DEFAULT_CLK_MICROS
+    property clk_peripheral : ConfigPeripheral = :pcm
+    property dma_primary_channel = LibPigpio::PI_DEFAULT_DMA_PRIMARY_CHANNEL
+    property dma_secondary_channel = LibPigpio::PI_DEFAULT_DMA_SECONDARY_CHANNEL
+    property update_mask : UInt64? = nil
+    property socket_port = LibPigpio::PI_DEFAULT_SOCKET_PORT
+    property interface_flag : ConfigInterface = :default
+    property mem_alloc_mode : ConfigMemAlloc = :auto
+  end
 end

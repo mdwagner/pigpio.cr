@@ -6,11 +6,11 @@ Crystal binding to pigpio C library
 
 1. Add the dependency to your `shard.yml`:
 
-   ```yaml
-   dependencies:
-     pigpio:
-       github: mdwagner/pigpio.cr
-   ```
+```yml
+dependencies:
+  pigpio:
+    github: mdwagner/pigpio.cr
+```
 
 2. Run `shards install`
 
@@ -19,11 +19,11 @@ Crystal binding to pigpio C library
 ```crystal
 require "pigpio"
 
-config = PigpioConfig.new
-# config = PigpioConfig.new(buffer_size_milliseconds: 120)
-# NOTE: remember to use #copy_with when modifying the config!
+client = PigpioClient.new
 
-client = PigpioClient.new(config)
+# configuration (if needed)
+client.config.buffer_millis = 200
+client.config.mem_alloc_mode = :pagemap
 
 # block usage (recommended)
 client.connect do |connection|
