@@ -9,14 +9,14 @@ module Pigpio
   alias CustomCallback2 = LibPigpio::GpioCustom2
 
   enum GpioMode
-    In    = LibPigpio::PI_INPUT
-    Out   = LibPigpio::PI_OUTPUT
-    Alto0 = LibPigpio::PI_ALTO0
-    Alto1 = LibPigpio::PI_ALTO1
-    Alto2 = LibPigpio::PI_ALTO2
-    Alto3 = LibPigpio::PI_ALTO3
-    Alto4 = LibPigpio::PI_ALTO4
-    Alto5 = LibPigpio::PI_ALTO5
+    In   = LibPigpio::PI_INPUT
+    Out  = LibPigpio::PI_OUTPUT
+    Alt0 = LibPigpio::PI_ALT0
+    Alt1 = LibPigpio::PI_ALT1
+    Alt2 = LibPigpio::PI_ALT2
+    Alt3 = LibPigpio::PI_ALT3
+    Alt4 = LibPigpio::PI_ALT4
+    Alt5 = LibPigpio::PI_ALT5
   end
 
   enum GpioPud
