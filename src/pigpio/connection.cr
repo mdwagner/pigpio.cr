@@ -33,7 +33,7 @@ module Pigpio
   class Connection
     @@alert_box : Void*?
 
-    def set_mode(gpio, mode : GpioMode)
+    def set_mode(gpio, mode : GpioMode) : Void
       case LibPigpio.gpio_set_mode(gpio, mode.value)
       when LibPigpio::PI_BAD_GPIO
         raise "Bad GPIO pin"
@@ -42,7 +42,7 @@ module Pigpio
       end
     end
 
-    def get_mode(gpio)
+    def get_mode(gpio) : GpioMode
       result = LibPigpio.gpio_get_mode(gpio)
 
       case result
@@ -53,7 +53,7 @@ module Pigpio
       end
     end
 
-    def set_pull_up_down(gpio, pud : GpioPud)
+    def set_pull_up_down(gpio, pud : GpioPud) : Void
       case LibPigpio.gpio_set_pull_up_down(gpio, pud.value)
       when LibPigpio::PI_BAD_GPIO
         raise "Bad GPIO pin"
@@ -62,7 +62,7 @@ module Pigpio
       end
     end
 
-    def read(gpio)
+    def read(gpio) : GpioLevel
       result = LibPigpio.gpio_read(gpio)
 
       case result
@@ -73,7 +73,7 @@ module Pigpio
       end
     end
 
-    def write(gpio, level : GpioLevel)
+    def write(gpio, level : GpioLevel) : Void
       case LibPigpio.gpio_write(gpio, level.value)
       when LibPigpio::PI_BAD_GPIO
         raise "Bad GPIO pin"
@@ -95,6 +95,10 @@ module Pigpio
       else
         LibPigpio.gpio_set_alert_func(pin, block)
       end
+    end
+
+    def cancel_alert(pin)
+      LibPigpio.gpio_set_alert_func(pin, nil)
     end
   end
 end
