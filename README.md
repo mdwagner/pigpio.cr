@@ -1,6 +1,6 @@
 # pigpio.cr
 
-Crystal binding to pigpio C library
+Crystal binding to [pigpio C library](https://abyz.me.uk/rpi/pigpio/cif.html)
 
 ## Installation
 
