@@ -39,7 +39,7 @@ client.stop
 
 ## Development
 
-Early days, but I have all the bindings created and tested against Pigpio C's test suite converted to Crystal. Pretty much all future changes will be for the Client.
+Early days, but I have all the bindings created and tested against Pigpio C's test suite (converted to Crystal). Pretty much all future changes will be for the Client & Connection.
 
 ## Contributing
 
