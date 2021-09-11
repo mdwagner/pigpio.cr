@@ -193,7 +193,7 @@
   </h2>
   
     
-      <a href="https://github.com/mdwagner/pigpio.cr/blob/d1adcdc2e44b2e903e748bc1c6dde53d128d813a/src/pigpio/connection.cr#L33" target="_blank">
+      <a href="https://github.com/mdwagner/pigpio.cr/blob/d12e1bdd800ef5f8691ed939ddcf9e889f64bc0e/src/pigpio/connection.cr#L33" target="_blank">
         pigpio/connection.cr
       </a>
     
@@ -229,7 +229,32 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#get_pwm_dutycycle(gpio)-instance-method" class="signature"><strong>#get_pwm_dutycycle</strong>(gpio)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#get_pwm_freq(gpio)-instance-method" class="signature"><strong>#get_pwm_freq</strong>(gpio)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#get_pwm_range(gpio)-instance-method" class="signature"><strong>#get_pwm_range</strong>(gpio)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#get_pwm_real_range(gpio)-instance-method" class="signature"><strong>#get_pwm_real_range</strong>(gpio)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#on_alert(pin,&block:OnAlertCallback)-instance-method" class="signature"><strong>#on_alert</strong>(pin, &block : OnAlertCallback)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#pwm(gpio,dutycycle):Void-instance-method" class="signature"><strong>#pwm</strong>(gpio, dutycycle) : Void</a>
         
       </li>
     
@@ -245,6 +270,16 @@
     
       <li class="entry-summary">
         <a href="#set_pull_up_down(gpio,pud:GpioPud):Void-instance-method" class="signature"><strong>#set_pull_up_down</strong>(gpio, pud : GpioPud) : Void</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#set_pwm_freq(gpio,freq)-instance-method" class="signature"><strong>#set_pwm_freq</strong>(gpio, freq)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#set_pwm_range(gpio,range)-instance-method" class="signature"><strong>#set_pwm_range</strong>(gpio, range)</a>
         
       </li>
     
@@ -308,7 +343,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d1adcdc2e44b2e903e748bc1c6dde53d128d813a/src/pigpio/connection.cr#L100" target="_blank">View source</a>]
+          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d12e1bdd800ef5f8691ed939ddcf9e889f64bc0e/src/pigpio/connection.cr#L163" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -324,7 +359,71 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d1adcdc2e44b2e903e748bc1c6dde53d128d813a/src/pigpio/connection.cr#L45" target="_blank">View source</a>]
+          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d12e1bdd800ef5f8691ed939ddcf9e889f64bc0e/src/pigpio/connection.cr#L45" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="get_pwm_dutycycle(gpio)-instance-method">
+      <div class="signature">
+        
+        def <strong>get_pwm_dutycycle</strong>(gpio)
+
+        <a class="method-permalink" href="#get_pwm_dutycycle(gpio)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d12e1bdd800ef5f8691ed939ddcf9e889f64bc0e/src/pigpio/connection.cr#L90" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="get_pwm_freq(gpio)-instance-method">
+      <div class="signature">
+        
+        def <strong>get_pwm_freq</strong>(gpio)
+
+        <a class="method-permalink" href="#get_pwm_freq(gpio)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d12e1bdd800ef5f8691ed939ddcf9e889f64bc0e/src/pigpio/connection.cr#L139" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="get_pwm_range(gpio)-instance-method">
+      <div class="signature">
+        
+        def <strong>get_pwm_range</strong>(gpio)
+
+        <a class="method-permalink" href="#get_pwm_range(gpio)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d12e1bdd800ef5f8691ed939ddcf9e889f64bc0e/src/pigpio/connection.cr#L112" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="get_pwm_real_range(gpio)-instance-method">
+      <div class="signature">
+        
+        def <strong>get_pwm_real_range</strong>(gpio)
+
+        <a class="method-permalink" href="#get_pwm_real_range(gpio)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d12e1bdd800ef5f8691ed939ddcf9e889f64bc0e/src/pigpio/connection.cr#L121" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -340,7 +439,23 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d1adcdc2e44b2e903e748bc1c6dde53d128d813a/src/pigpio/connection.cr#L85" target="_blank">View source</a>]
+          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d12e1bdd800ef5f8691ed939ddcf9e889f64bc0e/src/pigpio/connection.cr#L148" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="pwm(gpio,dutycycle):Void-instance-method">
+      <div class="signature">
+        
+        def <strong>pwm</strong>(gpio, dutycycle) : Void
+
+        <a class="method-permalink" href="#pwm(gpio,dutycycle):Void-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d12e1bdd800ef5f8691ed939ddcf9e889f64bc0e/src/pigpio/connection.cr#L81" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -356,7 +471,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d1adcdc2e44b2e903e748bc1c6dde53d128d813a/src/pigpio/connection.cr#L65" target="_blank">View source</a>]
+          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d12e1bdd800ef5f8691ed939ddcf9e889f64bc0e/src/pigpio/connection.cr#L63" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -372,7 +487,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d1adcdc2e44b2e903e748bc1c6dde53d128d813a/src/pigpio/connection.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d12e1bdd800ef5f8691ed939ddcf9e889f64bc0e/src/pigpio/connection.cr#L36" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -388,7 +503,39 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d1adcdc2e44b2e903e748bc1c6dde53d128d813a/src/pigpio/connection.cr#L56" target="_blank">View source</a>]
+          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d12e1bdd800ef5f8691ed939ddcf9e889f64bc0e/src/pigpio/connection.cr#L54" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="set_pwm_freq(gpio,freq)-instance-method">
+      <div class="signature">
+        
+        def <strong>set_pwm_freq</strong>(gpio, freq)
+
+        <a class="method-permalink" href="#set_pwm_freq(gpio,freq)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d12e1bdd800ef5f8691ed939ddcf9e889f64bc0e/src/pigpio/connection.cr#L130" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="set_pwm_range(gpio,range)-instance-method">
+      <div class="signature">
+        
+        def <strong>set_pwm_range</strong>(gpio, range)
+
+        <a class="method-permalink" href="#set_pwm_range(gpio,range)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d12e1bdd800ef5f8691ed939ddcf9e889f64bc0e/src/pigpio/connection.cr#L101" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -404,7 +551,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d1adcdc2e44b2e903e748bc1c6dde53d128d813a/src/pigpio/connection.cr#L76" target="_blank">View source</a>]
+          [<a href="https://github.com/mdwagner/pigpio.cr/blob/d12e1bdd800ef5f8691ed939ddcf9e889f64bc0e/src/pigpio/connection.cr#L72" target="_blank">View source</a>]
         
       </div>
     </div>
