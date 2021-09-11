@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="crystal_docs.project_version" content="master">
+<meta name="crystal_docs.project_name" content="pigpio">
+
+
+
+<link href="../css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../js/doc.js"></script>
+
+  <meta name="repository-name" content="pigpio">
+  <title>Pigpio::OnTimerCallback - pigpio master</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "../";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="../index.html">
+          pigpio
+        </a>
+      </h1>
+
+      <span class="project-version">
+        master
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent open current" data-id="pigpio/Pigpio" data-name="pigpio">
+      <a href="../Pigpio.html">Pigpio</a>
+      
+        <ul>
+  
+  <li class=" " data-id="pigpio/Pigpio/Client" data-name="pigpio::client">
+      <a href="../Pigpio/Client.html">Client</a>
+      
+    </li>
+  
+  <li class=" " data-id="pigpio/Pigpio/Config" data-name="pigpio::config">
+      <a href="../Pigpio/Config.html">Config</a>
+      
+    </li>
+  
+  <li class=" " data-id="pigpio/Pigpio/ConfigInterface" data-name="pigpio::configinterface">
+      <a href="../Pigpio/ConfigInterface.html">ConfigInterface</a>
+      
+    </li>
+  
+  <li class=" " data-id="pigpio/Pigpio/ConfigMemAlloc" data-name="pigpio::configmemalloc">
+      <a href="../Pigpio/ConfigMemAlloc.html">ConfigMemAlloc</a>
+      
+    </li>
+  
+  <li class=" " data-id="pigpio/Pigpio/ConfigPeripheral" data-name="pigpio::configperipheral">
+      <a href="../Pigpio/ConfigPeripheral.html">ConfigPeripheral</a>
+      
+    </li>
+  
+  <li class=" " data-id="pigpio/Pigpio/Connection" data-name="pigpio::connection">
+      <a href="../Pigpio/Connection.html">Connection</a>
+      
+    </li>
+  
+  <li class=" " data-id="pigpio/Pigpio/CustomCallback1" data-name="pigpio::customcallback1">
+      <a href="../Pigpio/CustomCallback1.html">CustomCallback1</a>
+      
+    </li>
+  
+  <li class=" " data-id="pigpio/Pigpio/CustomCallback2" data-name="pigpio::customcallback2">
+      <a href="../Pigpio/CustomCallback2.html">CustomCallback2</a>
+      
+    </li>
+  
+  <li class=" " data-id="pigpio/Pigpio/GpioLevel" data-name="pigpio::gpiolevel">
+      <a href="../Pigpio/GpioLevel.html">GpioLevel</a>
+      
+    </li>
+  
+  <li class=" " data-id="pigpio/Pigpio/GpioMode" data-name="pigpio::gpiomode">
+      <a href="../Pigpio/GpioMode.html">GpioMode</a>
+      
+    </li>
+  
+  <li class=" " data-id="pigpio/Pigpio/GpioPud" data-name="pigpio::gpiopud">
+      <a href="../Pigpio/GpioPud.html">GpioPud</a>
+      
+    </li>
+  
+  <li class=" " data-id="pigpio/Pigpio/OnAlertCallback" data-name="pigpio::onalertcallback">
+      <a href="../Pigpio/OnAlertCallback.html">OnAlertCallback</a>
+      
+    </li>
+  
+  <li class=" " data-id="pigpio/Pigpio/OnEventCallback" data-name="pigpio::oneventcallback">
+      <a href="../Pigpio/OnEventCallback.html">OnEventCallback</a>
+      
+    </li>
+  
+  <li class=" " data-id="pigpio/Pigpio/OnGetSamplesCallback" data-name="pigpio::ongetsamplescallback">
+      <a href="../Pigpio/OnGetSamplesCallback.html">OnGetSamplesCallback</a>
+      
+    </li>
+  
+  <li class=" " data-id="pigpio/Pigpio/OnISRCallback" data-name="pigpio::onisrcallback">
+      <a href="../Pigpio/OnISRCallback.html">OnISRCallback</a>
+      
+    </li>
+  
+  <li class=" " data-id="pigpio/Pigpio/OnSignalCallback" data-name="pigpio::onsignalcallback">
+      <a href="../Pigpio/OnSignalCallback.html">OnSignalCallback</a>
+      
+    </li>
+  
+  <li class=" current" data-id="pigpio/Pigpio/OnTimerCallback" data-name="pigpio::ontimercallback">
+      <a href="../Pigpio/OnTimerCallback.html">OnTimerCallback</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="pigpio/PigpioClient" data-name="pigpioclient">
+      <a href="../PigpioClient.html">PigpioClient</a>
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1 class="type-name">
+
+  <span class="kind">alias</span> Pigpio::OnTimerCallback
+
+</h1>
+
+
+
+
+
+
+
+  <h2>
+    <a id="alias-definition" class="anchor" href="#alias-definition">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Alias Definition
+  </h2>
+  <code> -> Nil</code>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2>
+    <a id="defined-in" class="anchor" href="#defined-in">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Defined in:
+  </h2>
+  
+    
+      <a href="https://github.com/mdwagner/pigpio.cr/blob/d1adcdc2e44b2e903e748bc1c6dde53d128d813a/src/pigpio/connection.cr#L5" target="_blank">
+        pigpio/connection.cr
+      </a>
+    
+    <br/>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="methods-inherited">
+  
+</div>
+
+
+
+
+
+
+
+
+
+</div>
+
+</body>
+</html>
