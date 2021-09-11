@@ -1,0 +1,57 @@
+name: Push Workflow
+
+on: push
+
+jobs:
+  checks:
+    name: Checks
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        crystal: [1.0.0, 1.1.0]
+
+    container:
+      image: crystallang/crystal:${{ matrix.crystal }}-alpine
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: shards install
+
+      - name: Run linter
+        run: ./bin/ameba
+
+      - name: Check file formatting
+        run: crystal tool format --check src spec
+        if: always()
+
+  docs:
+    name: Docs
+    needs: checks
+    if: success() && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+
+    container:
+      image: crystallang/crystal:1.0.0-alpine
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install rsync
+        run: apk --no-cache add rsync
+
+      - name: Install dependencies
+        run: shards install
+
+      - name: Generate docs
+        run: crystal docs
+
+      - name: Deploy docs to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.0.0
+        with:
+          branch: gh-pages
+          folder: docs
