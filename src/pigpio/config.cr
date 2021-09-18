@@ -21,8 +21,8 @@ module Pigpio
     property buffer_millis = LibPigpio::PI_DEFAULT_BUFFER_MILLIS
     property clk_micros = LibPigpio::PI_DEFAULT_CLK_MICROS
     property clk_peripheral : ConfigPeripheral = :pcm
-    property dma_primary_channel = LibPigpio::PI_DEFAULT_DMA_PRIMARY_CHANNEL
-    property dma_secondary_channel = LibPigpio::PI_DEFAULT_DMA_SECONDARY_CHANNEL
+    property dma_primary_channel : UInt32? = nil
+    property dma_secondary_channel : UInt32? = nil
     property update_mask : UInt64? = nil
     property socket_port = LibPigpio::PI_DEFAULT_SOCKET_PORT
     property interface_flag : ConfigInterface = :default
