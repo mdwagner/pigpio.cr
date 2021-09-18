@@ -40,11 +40,11 @@ module Pigpio
       LibPigpio.gpio_cfg_mem_alloc(@config.mem_alloc_mode.value)
 
       if @config.update_mask
-        LibPigpio.gpio_cfg_permissions(@config.update_mask)
+        LibPigpio.gpio_cfg_permissions(@config.update_mask.not_nil!)
       end
 
       if @config.dma_primary_channel && @config.dma_secondary_channel
-        LibPigpio.gpio_cfg_dma_channels(@config.dma_primary_channel, @config.dma_secondary_channel)
+        LibPigpio.gpio_cfg_dma_channels(@config.dma_primary_channel.not_nil!, @config.dma_secondary_channel.not_nil!)
       end
     end
   end
