@@ -22,10 +22,9 @@ client.connect do |c|
   stop_program = false
   Signal::INT.trap { stop_program = true }
 
-  puts "Here we go!"
-  loop do
-    break if stop_program
-    if c.read(button_pin).low?
+  puts "Here we go! Press Ctrl+C to exit"
+  until stop_program
+    if c.read(button_pin).high?
       c.pwm(pwm_pin, dc)
       c.write(led_pin, :low)
     else
@@ -36,5 +35,5 @@ client.connect do |c|
       sleep 0.075
     end
   end
-  puts "Finished!"
+  c.pwm(pwm_pin, 0)
 end
