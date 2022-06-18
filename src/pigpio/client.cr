@@ -7,7 +7,7 @@ module Pigpio
       LibPigpio.gpio_init
     end
 
-    def stop : Void
+    def stop : Nil
       LibPigpio.gpio_terminate
     end
 
@@ -28,7 +28,7 @@ module Pigpio
       Connection.new
     end
 
-    def reset_config : Void
+    def reset_config : Nil
       @config = Config.new
     end
 

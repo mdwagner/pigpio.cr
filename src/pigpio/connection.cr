@@ -33,7 +33,7 @@ module Pigpio
   class Connection
     @@alert_box : Void*?
 
-    def set_mode(gpio, mode : GpioMode) : Void
+    def set_mode(gpio, mode : GpioMode) : Nil
       case LibPigpio.gpio_set_mode(gpio, mode.value)
       when LibPigpio::PI_BAD_GPIO
         raise "Bad GPIO pin"
@@ -43,7 +43,7 @@ module Pigpio
     end
 
     def get_mode(gpio) : GpioMode
-      case (r = LibPigpio.gpio_get_mode(gpio))
+      case r = LibPigpio.gpio_get_mode(gpio)
       when LibPigpio::PI_BAD_GPIO
         raise "Bad GPIO pin"
       else
@@ -51,7 +51,7 @@ module Pigpio
       end
     end
 
-    def set_pull_up_down(gpio, pud : GpioPud) : Void
+    def set_pull_up_down(gpio, pud : GpioPud) : Nil
       case LibPigpio.gpio_set_pull_up_down(gpio, pud.value)
       when LibPigpio::PI_BAD_GPIO
         raise "Bad GPIO pin"
@@ -61,7 +61,7 @@ module Pigpio
     end
 
     def read(gpio) : GpioLevel
-      case (r = LibPigpio.gpio_read(gpio))
+      case r = LibPigpio.gpio_read(gpio)
       when LibPigpio::PI_BAD_GPIO
         raise "Bad GPIO pin"
       else
@@ -69,7 +69,7 @@ module Pigpio
       end
     end
 
-    def write(gpio, level : GpioLevel) : Void
+    def write(gpio, level : GpioLevel) : Nil
       case LibPigpio.gpio_write(gpio, level.value)
       when LibPigpio::PI_BAD_GPIO
         raise "Bad GPIO pin"
@@ -78,7 +78,7 @@ module Pigpio
       end
     end
 
-    def pwm(gpio, dutycycle) : Void
+    def pwm(gpio, dutycycle) : Nil
       case LibPigpio.gpio_pwm(gpio, dutycycle)
       when LibPigpio::PI_BAD_USER_GPIO
         raise "Bad GPIO"
@@ -88,7 +88,7 @@ module Pigpio
     end
 
     def get_pwm_dutycycle(gpio)
-      case (r = LibPigpio.gpio_get_pwm_dutycycle(gpio))
+      case r = LibPigpio.gpio_get_pwm_dutycycle(gpio)
       when LibPigpio::PI_BAD_USER_GPIO
         raise "Bad GPIO"
       when LibPigpio::PI_NOT_PWM_GPIO
@@ -99,7 +99,7 @@ module Pigpio
     end
 
     def set_pwm_range(gpio, range)
-      case (r = LibPigpio.gpio_set_pwm_range(gpio, range))
+      case r = LibPigpio.gpio_set_pwm_range(gpio, range)
       when LibPigpio::PI_BAD_USER_GPIO
         raise "Bad GPIO"
       when LibPigpio::PI_BAD_DUTYRANGE
@@ -110,7 +110,7 @@ module Pigpio
     end
 
     def get_pwm_range(gpio)
-      case (r = LibPigpio.gpio_get_pwm_range)
+      case r = LibPigpio.gpio_get_pwm_range
       when LibPigpio::PI_BAD_USER_GPIO
         raise "Bad GPIO"
       else
@@ -119,7 +119,7 @@ module Pigpio
     end
 
     def get_pwm_real_range(gpio)
-      case (r = LibPigpio.gpio_get_pwm_real_range(gpio))
+      case r = LibPigpio.gpio_get_pwm_real_range(gpio)
       when LibPigpio::PI_BAD_USER_GPIO
         raise "Bad GPIO"
       else
@@ -128,7 +128,7 @@ module Pigpio
     end
 
     def set_pwm_freq(gpio, freq)
-      case (r = LibPigpio.gpio_set_pwm_freq(gpio, freq))
+      case r = LibPigpio.gpio_set_pwm_freq(gpio, freq)
       when LibPigpio::PI_BAD_USER_GPIO
         raise "Bad GPIO"
       else
@@ -137,7 +137,7 @@ module Pigpio
     end
 
     def get_pwm_freq(gpio)
-      case (r = LibPigpio.gpio_get_pwm_freq(gpio))
+      case r = LibPigpio.gpio_get_pwm_freq(gpio)
       when LibPigpio::PI_BAD_USER_GPIO
         raise "Bad GPIO"
       else
