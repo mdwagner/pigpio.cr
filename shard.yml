@@ -1,20 +1,15 @@
 name: pigpio
-version: 0.2.0
+version: 0.1.0
 
 authors:
   - Michael Wagner <mdwranger@gmail.com>
 
-crystal: '>= 1.0.0'
+crystal: ">= 1.5.0"
 
 license: MIT
 
 libraries:
   pigpio: ">= 79"
 
-development_dependencies:
-  ameba:
-    github: crystal-ameba/ameba
-    version: '~> 0.13.0'
-  spectator:
-    gitlab: arctic-fox/spectator
-    version: '~> 0.9.40'
+crystalline:
+  main: src/pigpio.cr

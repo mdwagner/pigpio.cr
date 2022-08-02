@@ -1,4 +1,5 @@
 module Pigpio
+  # https://abyz.me.uk/rpi/pigpio/cif.html
   @[Link("pigpio")]
   lib LibPigpio
     alias Int = LibC::Int
