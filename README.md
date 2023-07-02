@@ -10,7 +10,7 @@ Crystal bindings to [pigpio](https://abyz.me.uk/rpi/pigpio/cif.html)
 
    ```yaml
    dependencies:
-     xls:
+     pigpio:
        github: mdwagner/pigpio.cr
        version: 0.1.0
    ```
